@@ -5,7 +5,7 @@ class Card(db.Model):
     message = db.Column(db.String, nullable=False)
     likes_count = db.Column(db.Integer, default=0)
     board = db.relationship("Board", back_populates = "cards")
-    board_id = db.Column(db.Integer, db.ForeignKey('board.id'))
+    board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'))
 
 
     def to_dict(self):
@@ -15,7 +15,7 @@ class Card(db.Model):
             "likes_count":self.likes_count
         }
         return card_dict
-    
+
     @classmethod
     def from_dict(cls, data_dict):
         new_obj = cls(

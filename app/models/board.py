@@ -1,7 +1,7 @@
 from app import db
 
 class Board(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    board_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     owner = db.Column(db.String, nullable=False)
     cards = db.relationship("Card", back_populates = "board", lazy = True)
@@ -18,15 +18,12 @@ class Board(db.Model):
 
         if self.card_id:
             boards_dict["card_id"] = self.card_id
-        return boards_dict 
+        return boards_dict
 
-    
+
     @classmethod
     def from_dict(cls, data_dict):
         return cls(
             title = data_dict["title"],
             owner = data_dict["owner"]
         )
-    
-
-    
