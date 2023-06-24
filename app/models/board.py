@@ -15,7 +15,11 @@ class Board(db.Model):
         "owner": self.owner,
 
         }
+
+        if self.card_id:
+            boards_dict["card_id"] = self.card_id
         return boards_dict 
+
     
     @classmethod
     def from_dict(cls, data_dict):
