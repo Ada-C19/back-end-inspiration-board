@@ -36,3 +36,7 @@ def get_one_board(board_id):
     response_body = dict(board = board.to_dict())
 
     return jsonify(response_body), 200
+
+
+# create end point that retrieves and posts cards by goal_id
+# ask if we need to create delete, put and patch endpoints
