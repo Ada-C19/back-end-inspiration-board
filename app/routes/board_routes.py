@@ -21,3 +21,11 @@ def create_board():
     response_body = {"boards": new_board.to_dict()}
 
     return jsonify(response_body), 201
+
+@boards_bp.route("", methods=["GET"])
+def get_all_boards():
+
+    boards = Board.query.all()
+    board_list = [board.to_dict() for board in boards]
+
+    return jsonify(board_list), 200
