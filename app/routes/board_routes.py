@@ -29,3 +29,10 @@ def get_all_boards():
     board_list = [board.to_dict() for board in boards]
 
     return jsonify(board_list), 200
+
+@boards_bp.route("/<board_id>", methods=["GET"])
+def get_one_board(board_id):
+    board = validate(Board,board_id)
+    response_body = dict(board = board.to_dict())
+
+    return jsonify(response_body), 200
