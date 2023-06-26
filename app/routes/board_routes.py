@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
+from app.models.card import Card
 from ..routes.helper import validate_model
 
 # example_bp = Blueprint('example_bp', __name__)
-board_bp = Blueprint("board", __name__, url_prefix="/board")
+board_bp = Blueprint("board", __name__, url_prefix="/boards")
 
 # CREATE
 
@@ -45,3 +46,9 @@ def delete_board(board_id):
     db.session.delete(board)
     db.session.commit()
     return jsonify({"board": board.to_dict()})
+
+
+# ONE-TO-MANY 
+@board_bp.route("/<board_id>/cards", methods=["POST"])
+def post_cards_to_board(board_id):
+    pass
