@@ -22,9 +22,8 @@ def create_board():
         abort(make_response(
             {"details": "Cannot create board. Invalid data."}, 400))
 
+
 # READ
-
-
 @board_bp.route("", methods=["GET"])
 def read_all_boards():
     boards = Board.query.all()
@@ -48,7 +47,7 @@ def delete_board(board_id):
     return jsonify({"board": board.to_dict()})
 
 
-# ONE-TO-MANY 
+# ONE-TO-MANY
 @board_bp.route("/<board_id>/cards", methods=["POST"])
 def post_cards_to_board(board_id):
     try:

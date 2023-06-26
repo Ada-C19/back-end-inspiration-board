@@ -16,3 +16,10 @@ class Card(db.Model):
                          likes=self.likes_count,
                          board_id=self.board_id)
         return card_dict
+
+    @classmethod
+    def from_dict(cls, dict_data):
+        request_task = cls(message=dict_data["message"],
+                           likes_count=dict_data["likes_count"],
+                           board_id=dict_data["board_id"])
+        return request_task
