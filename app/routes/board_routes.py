@@ -36,11 +36,6 @@ def get_one_board(board_id):
 
     return jsonify(response_body), 200
 
-
-# create end point that retrieves and posts cards by goal_id
-# ask if we need to create delete, put and patch endpoints
-
-
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
 def get_board_cards(board_id):
     board = validate(Board,board_id)
