@@ -32,6 +32,14 @@ def read_one_board(board_id):
     return jsonify({"board": board.to_dict()})
 
 
+# DELETE
+@board_bp.route("/<board_id>", methods=["DELETE"])
+def delete_board(board_id):
+    board = validate_model(Board, board_id)
+    db.session.delete(board)
+    db.session.commit()
+    return jsonify({"board": board.to_dict()})
+
 
 
 
