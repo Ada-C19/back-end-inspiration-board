@@ -1,7 +1,7 @@
 from app import db
 
 class Board(db.Model):
-    board_id = db.Column(db.integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String, nullable=False)
     owner = db.Column(db.String, nullable=False)
     cards = db.relationship("Card", back_populates="board")
@@ -16,7 +16,7 @@ class Board(db.Model):
 
     def to_dict(self):
         board_dict = {
-            "id": self.board_id,
+            "id": self.id,
             "title": self.title,
             "owner": self.owner
         }
