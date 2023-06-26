@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
-from app.helper import validate_model
+from app.routes.helper import validate_model
 
 # example_bp = Blueprint('example_bp', __name__)
-board_bp = Blueprint("board", __name__, url_prefix="/board")
+board_bp = Blueprint("board", __name__, url_prefix="/boards")
 
 # CREATE
 
@@ -21,9 +21,8 @@ def create_board():
         abort(make_response(
             {"details": "Cannot create board. Invalid data."}, 400))
 
+
 # READ
-
-
 @board_bp.route("", methods=["GET"])
 def read_all_boards():
     boards = Board.query.all()

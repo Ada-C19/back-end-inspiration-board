@@ -18,7 +18,32 @@ def get_all_cards():
 # Read one card:
 @bp.route("/<card_id>", methods=["Get"])
 def get_one_card(card_id):
-    task_object = validate_model(Card, card_id)
-    return make_response({"card": task_object.to_dict()}, 200)
+    card_object = validate_model(Card, card_id)
+    return make_response({"card": card_object.to_dict()}, 200)
+
 
 # Create card:
+@bp.route("", methods=["Post"])
+def post_one_card():
+    try:
+        request_body_dict = request.get_json()
+        card_object = Card.from_dict(request_body_dict)
+        db.session.add(card_object)
+        db.session.commit()
+        return make_response({"card": card_object.to_dict()}, 201)
+    except(KeyError):
+        return make_response({"details": "Invalid data"}, 400)
+
+# Delete a card:
+
+
+@bp.route("/card_id", methods=["Delete"])
+def delete_card(card_id):
+    try:
+        request_body_dict = request.get_json()
+        card_object = Card.from_dict(request_body_dict)
+        db.session.delete(card_object)
+        db.session.commit()
+        return make_response({"card": card_object.to_dict()}, 201)
+    except(KeyError):
+        return make_response({"details": "Invalid data"}, 400)
