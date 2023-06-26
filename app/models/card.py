@@ -20,6 +20,6 @@ class Card(db.Model):
     def from_dict(cls, data_dict):
         new_obj = cls(
             message = data_dict["message"],
-            board_id = data_dict["board_id"]
+            # board_id = data_dict["board_id"]
         )
         return new_obj

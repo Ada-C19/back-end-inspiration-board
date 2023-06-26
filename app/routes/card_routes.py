@@ -4,35 +4,22 @@ from app.models.board import Board
 from app.models.card import Card
 from .routes_helper import validate, validate_card
 
-
-cards_bp = Blueprint("card_bp", __name__, url_prefix="/cards")
-
+cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 @cards_bp.route("", methods=["POST"])
 def create_card():
     request_body = request.get_json()
-    if "board_id" not in request_body or "message" not in request_body:
+    if "message" not in request_body:
         return make_response({"details": "data not in request body"}, 400)
 
-    try:
-        board_id = request_body["board_id"]
-        validate(Board, board_id)
-        new_card = Card.from_dict(request_body)
-        validate_card(new_card)
-    except:
-        return jsonify({"details": "Invalid Data"}), 400
+    new_card = Card.from_dict(request_body)
 
     db.session.add(new_card)
     db.session.commit()
-    return {
-        "card": {
-            "id": new_card.card_id,
-            "message": new_card.message,
-            "board_id": new_card.board_id
-        }
-    }, 201
 
+    response_body = {"cards": new_card.to_dict()}
 
+    return jsonify(response_body), 201
 
 @cards_bp.route("", methods=["GET"])
 def get_all_cards():
@@ -46,5 +33,5 @@ def get_all_cards():
 @ cards_bp.route("/<obj_id>", methods=["GET"])
 def get_one_card(obj_id):
     card = validate(Card, obj_id)
-
-    return jsonify({"card": card.to_dict()})
+    response_body = dict(card = card.to_dict())
+    return jsonify(response_body), 200
