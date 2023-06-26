@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
-from app.routes.helper import validate_model
+from app.helper import validate_model
 
 # example_bp = Blueprint('example_bp', __name__)
 board_bp = Blueprint("board", __name__, url_prefix="/board")
@@ -35,4 +35,13 @@ def read_all_boards():
 @board_bp.route("/<board_id>", methods=["GET"])
 def read_one_board(board_id):
     board = validate_model(Board, board_id)
+    return jsonify({"board": board.to_dict()})
+
+
+# DELETE
+@board_bp.route("/<board_id>", methods=["DELETE"])
+def delete_board(board_id):
+    board = validate_model(Board, board_id)
+    db.session.delete(board)
+    db.session.commit()
     return jsonify({"board": board.to_dict()})

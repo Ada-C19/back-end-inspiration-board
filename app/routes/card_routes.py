@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
 from ..models.card import Card
-from ..routes import validate_model
+from ..routes.helper import validate_model
 
 # example_bp = Blueprint('example_bp', __name__)
 bp = Blueprint("cards", __name__, url_prefix="/cards")
@@ -16,7 +16,7 @@ def get_all_cards():
 
 
 # Read one card:
-@bp.route("<card_id>/", methods=["Get"])
+@bp.route("/<card_id>", methods=["Get"])
 def get_one_card(card_id):
     task_object = validate_model(Card, card_id)
     return make_response({"card": task_object.to_dict()}, 200)
