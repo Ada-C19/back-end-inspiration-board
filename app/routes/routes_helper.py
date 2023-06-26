@@ -3,17 +3,17 @@ from app.models.board import Board
 from app.models.card import Card
 
 
-def validate(cls, obj_id):
+def validate(cls, model_id):
     try:
-        obj_id = int(obj_id)
+        model_id = int(model_id)
     except ValueError:
-        response_str = f"{cls.__name__} {obj_id} invalid"
+        response_str = f"{cls.__name__} {model_id} invalid"
         abort(make_response(jsonify({"message":response_str}), 400))
 
-    matching_obj = cls.query.get(obj_id)
+    matching_obj = cls.query.get(model_id)
 
     if not matching_obj:
-        response_str = f"{cls.__name__.lower()} {obj_id} not found"
+        response_str = f"{cls.__name__.lower()} {model_id} not found"
         abort(make_response(jsonify({"message":response_str}), 404))
 
     return matching_obj

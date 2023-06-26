@@ -6,6 +6,7 @@ from .routes_helper import validate, validate_card
 
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
+
 @cards_bp.route("", methods=["POST"])
 def create_card():
     request_body = request.get_json()
@@ -21,6 +22,7 @@ def create_card():
 
     return jsonify(response_body), 201
 
+
 @cards_bp.route("", methods=["GET"])
 def get_all_cards():
 
@@ -30,8 +32,17 @@ def get_all_cards():
     return jsonify(cards_response), 200
 
 
-@ cards_bp.route("/<obj_id>", methods=["GET"])
-def get_one_card(obj_id):
-    card = validate(Card, obj_id)
-    response_body = dict(card = card.to_dict())
+@cards_bp.route("/<model_id>", methods=["GET"])
+def get_one_card(model_id):
+    card = validate(Card, model_id)
+    response_body = dict(card=card.to_dict())
     return jsonify(response_body), 200
+
+@cards_bp.route("/<model_id>", methods=["DELETE"])
+def delete_cards(model_id):
+    card = validate(Card, model_id)
+
+    db.session.delete(card)
+    db.session.commit()
+
+    return jsonify({"details": f'Card {model_id} "{card.message}"successfully deleted'}), 200
