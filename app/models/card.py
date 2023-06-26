@@ -4,6 +4,7 @@ class Card(db.Model):
     card_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     message = db.Column(db.String(225), nullable=False)
     likes_count= db.Column(db.Integer, nullable=False )
+    board_id = db.Column(db.Integer, db.ForeignKey('board.boaard_is'))
 
 def to_dict(self):
     return ({"card_id": self.card_id,
@@ -11,8 +12,8 @@ def to_dict(self):
             "likes_count": self.likes_count})
 
 @classmethod
-def from_dict(cls,data_dict):
+def from_dict(cls,request_body):
     return cls(
-        messge = data_dict["message"],
-        likes_count= data_dict["likes_count"]
+        messge = request_body["message"],
+        likes_count= request_body["likes_count"]
     )
