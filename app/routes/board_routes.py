@@ -52,11 +52,11 @@ def get_board_cards(board_id):
     return jsonify(cards_response), 200
 
 
-# @boards_bp.route("/<board_id>", methods=["DELETE"])
-# def delete_boards(board_id):
-#     board = validate(Board, board_id)
+@boards_bp.route("/<board_id>", methods=["DELETE"])
+def delete_boards(board_id):
+    board = validate(Board, board_id)
 
-#     db.session.delete(board)
-#     db.session.commit()
+    db.session.delete(board)
+    db.session.commit()
 
-#     return jsonify({"details": f'Board {board_id} "{board.title}"successfully deleted'}), 200
+    return jsonify({"details": f'Board {board_id} "{board.title}"successfully deleted'}), 200
