@@ -51,4 +51,30 @@ ONE-TO-MANY
 
 @board_bp.route("/<board_id>/cards", methods=["POST"])
 def post_cards_to_board(board_id):
-    pass
+    try:
+        board = validate_model(Board, board_id)
+        request_body = request.get_json()
+        card_list = request_body.get("card_ids")
+        new_card_ids = []
+        for card in card_list:
+            card = validate_model(Card, card)
+            card.board_id = board.board_id
+            new_card_ids.append(card.card_id)
+
+        db.session.commit()
+        return make_response(jsonify({"id": board.board_id, "card_ids": new_card_ids}), 200)
+    
+    except KeyError as error:
+        abort(make_response({"details": "Data not found"}, 404))
+
+@board_bp.route("/<board_id>/cards", methods=["GET"])
+def read_cards_on_board(board_id):
+    try:
+        board = validate_model(Board, board_id)
+        cards_response = []
+        for card in board.cards:
+            cards_response.append(card.to_dict())
+        return jsonify({"id": board.board_id, "cards": cards_response, "title": board.title}), 200
+    
+    except KeyError as error:
+        abort(make_response({"details": "Data not found"}, 404))
