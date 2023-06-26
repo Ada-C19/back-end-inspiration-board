@@ -19,6 +19,7 @@ def validate_model(model_class, model_id):
 
 #example_bp = Blueprint('example_bp', __name__)
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
+cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 # create a board
 @boards_bp.route("", methods=["POST"])
@@ -70,4 +71,12 @@ def get_cards_for_board(board_id):
 
     return jsonify(cards), 200
 
+# delete card 
+@cards_bp.route('/<card_id>', methods=['DELETE'])
+def delete_card(card_id):
+    card = validate_model(Card, card_id)
 
+    db.session.delete(card)
+    db.session.commit()
+
+    return jsonify('Card successfully deleted'), 201
