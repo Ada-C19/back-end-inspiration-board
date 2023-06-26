@@ -50,22 +50,21 @@ def get_one_board(board_id):
 def update_board(board_id):
     board = validate_model(Board, board_id)
     request_body = request.get_json()
-    task.title = request_body['title']
-    task.description = request_body['description']
+    board.title = request_body['title']
+    board.owner = request_body['owner']
     
     db.session.commit()
-    response_dict = {}
-    response_dict["task"] = task.to_dict()
+    response_dict = board.to_dict()
     return response_dict
 
 
-@task_bp.route('/<task_id>', methods = ['DELETE'])
-def delete_task(task_id):
-    task = validate_model(Task, task_id)
-    db.session.delete(task)
-    db.session.commit()
-    return  {
-        "details": f'Task {task_id} "{task.title}" successfully deleted'
+@board_bp.route('/<board_id>', methods = ['DELETE'])
+def delete_task(board_id):
+   board = validate_model(Board,board_id)
+   db.session.delete(board)
+   db.session.commit()
+   return  {
+        "details": f'Board {board_id} "{board.title}" successfully deleted'
     }
     
     
