@@ -4,7 +4,7 @@ class Card(db.Model):
     card_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     message = db.Column(db.String(225), nullable=False)
     likes_count= db.Column(db.Integer, nullable=False )
-    board_id = db.Column(db.Integer, db.ForeignKey('board.boaard_is'))
+    board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'))
 
 def to_dict(self):
     return ({"card_id": self.card_id,
