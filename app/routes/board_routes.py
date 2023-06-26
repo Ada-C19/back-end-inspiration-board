@@ -39,13 +39,6 @@ def get_all_boards():
     for board in boards:
         board_response.append(board.to_dict())
     return jsonify(board_response)
-
-@board_bp.route('/<board_id>', methods=['GET'])
-def get_one_board(board_id):
-    board = validate_model(Board, board_id)
-    response_dict = board.to_dict()
-    return response_dict
-
     
 @board_bp.route('/<board_id>', methods = ['PUT'])
 def update_board(board_id):
