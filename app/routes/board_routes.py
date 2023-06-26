@@ -40,3 +40,23 @@ def get_one_board(board_id):
 
 # create end point that retrieves and posts cards by goal_id
 # ask if we need to create delete, put and patch endpoints
+
+
+@boards_bp.route("/<board_id>/cards", methods=["GET"])
+def get_board_cards(board_id):
+    board = validate(Board,board_id)
+
+    cards = Card.query.filter(Card.board_id == board.board_id)
+    cards_response = [card.to_dict() for card in cards]
+
+    return jsonify(cards_response), 200
+
+
+# @boards_bp.route("/<board_id>", methods=["DELETE"])
+# def delete_boards(board_id):
+#     board = validate(Board, board_id)
+
+#     db.session.delete(board)
+#     db.session.commit()
+
+#     return jsonify({"details": f'Board {board_id} "{board.title}"successfully deleted'}), 200
