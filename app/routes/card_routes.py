@@ -44,4 +44,46 @@ def delete_card(card_id):
         db.session.commit()
         return make_response({"card": response_object.to_dict()}, 200)
     except(KeyError):
-        return make_response({"details": "Invalid data"}, 400)
+        return make_response({"details": "incomplete information"}, 400)
+
+
+# Replace a card
+@bp.route("/<card_id>", methods=["PUT"])
+def replace_card(card_id):
+    card_object = validate_model(Card, card_id)
+    try:
+        request_body = request.get_json()
+        card_object.message = request_body["message"]
+        card_object.likes_count = request_body["likes_count"]
+        card_object.board_id = request_body["board_id"]
+        db.session.commit()
+        # =============================================================
+        card_object = validate_model(Card, card_id)
+        return make_response({"card": card_object.to_dict()}, 200)
+    except(KeyError):
+        return make_response(jsonify("incomplete information"), 400)
+
+# Update a card
+
+
+@bp.route("/<card_id>", methods=["PATCH"])
+def update_card(card_id):
+    card = validate_model(Card, card_id)
+    request_body = request.get_json()
+    flag = False
+    if request_body.get("message"):
+        flag = True
+        card.message = request_body["message"]
+    if request_body.get("likes_count"):
+        flag = True
+        card.likes_count = request_body["likes_count"]
+    if request_body.get("board_id"):
+        flag = True
+        card.board_id = request_body["board_id"]
+    db.session.commit()
+    if flag:
+        # =============================================================
+        card_object = validate_model(Card, card_id)
+        return make_response({"card": card_object.to_dict()}, 200)
+    else:
+        return make_response(jsonify(f"nothing was updated"))

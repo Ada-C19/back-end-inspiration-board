@@ -46,9 +46,7 @@ def delete_board(board_id):
     return jsonify({"board": board.to_dict()})
 
 
-ONE-TO-MANY
-
-
+# ONE-TO-MANY
 @board_bp.route("/<board_id>/cards", methods=["POST"])
 def post_cards_to_board(board_id):
     try:
@@ -63,9 +61,10 @@ def post_cards_to_board(board_id):
 
         db.session.commit()
         return make_response(jsonify({"id": board.board_id, "card_ids": new_card_ids}), 200)
-    
+
     except KeyError as error:
         abort(make_response({"details": "Data not found"}, 404))
+
 
 @board_bp.route("/<board_id>/cards", methods=["GET"])
 def read_cards_on_board(board_id):
@@ -75,6 +74,6 @@ def read_cards_on_board(board_id):
         for card in board.cards:
             cards_response.append(card.to_dict())
         return jsonify({"id": board.board_id, "cards": cards_response, "title": board.title}), 200
-    
+
     except KeyError as error:
         abort(make_response({"details": "Data not found"}, 404))
