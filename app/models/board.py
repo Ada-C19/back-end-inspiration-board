@@ -22,3 +22,4 @@ def from_dict(cls,data_dict):
         title = data_dict["title"],
         owner= data_dict["owner"]
     )
+    

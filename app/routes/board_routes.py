@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, abort, make_response, request
 from flask import Response
 from app import db
 from app.models.board import Board
+from app.models.card import Card
 
 
 board_bp = Blueprint("board_bp", __name__, url_prefix="/board")
@@ -66,5 +67,30 @@ def delete_board(board_id):
    return  {
         "details": f'Board {board_id} "{board.title}" successfully deleted'
     }
-    
+
+
+@board_bp.route("<board_id>/cards", methods=["POST"])
+def create_card(board_id):
+    board = validate_model(Board, board_id)
+    request_body = request.get_json()
+    try:
+        new_card = Card.from_dict(request_body)
+        new_card.board = board
+
+        db.session.add(new_card)
+        db.session.commit()
+
+        return make_response(jsonify(f"Card {new_card.card_id} successfully created"), 201)
+    except KeyError as e:
+        abort(make_response({"message": f"missing required value: {e}"}, 400))
+
+
+@board_bp.route("<board_id>/cards", methods=["GET"])
+def read_cards(board_id):
+    board = validate_model(Board, board_id)
+
+    cards_response = []
+    for card in board.cards:
+        cards_response.append(card.to_dict())
+
     
