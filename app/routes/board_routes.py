@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
-from app.helper import validate_model
+from ..routes.helper import validate_model
 
 # example_bp = Blueprint('example_bp', __name__)
 board_bp = Blueprint("board", __name__, url_prefix="/board")
