@@ -11,7 +11,7 @@ bp = Blueprint("cards", __name__, url_prefix="/cards")
 @bp.route("", methods=["Get"])
 def get_all_cards():
     cards_object = Card.query.all()
-    card_list = [card.to_dict for card in cards_object]
+    card_list = [card.to_dict() for card in cards_object]
     return make_response(jsonify(card_list), 200)
 
 
@@ -34,16 +34,14 @@ def post_one_card():
     except(KeyError):
         return make_response({"details": "Invalid data"}, 400)
 
+
 # Delete a card:
-
-
-@bp.route("/card_id", methods=["Delete"])
+@bp.route("/<card_id>", methods=["Delete"])
 def delete_card(card_id):
     try:
-        request_body_dict = request.get_json()
-        card_object = Card.from_dict(request_body_dict)
-        db.session.delete(card_object)
+        response_object = validate_model(Card, card_id)
+        db.session.delete(response_object)
         db.session.commit()
-        return make_response({"card": card_object.to_dict()}, 201)
+        return make_response({"card": response_object.to_dict()}, 200)
     except(KeyError):
         return make_response({"details": "Invalid data"}, 400)

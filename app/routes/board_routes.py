@@ -7,9 +7,8 @@ from ..routes.helper import validate_model
 # example_bp = Blueprint('example_bp', __name__)
 board_bp = Blueprint("board", __name__, url_prefix="/boards")
 
+
 # CREATE
-
-
 @board_bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
@@ -47,7 +46,9 @@ def delete_board(board_id):
     return jsonify({"board": board.to_dict()})
 
 
-# ONE-TO-MANY
+ONE-TO-MANY
+
+
 @board_bp.route("/<board_id>/cards", methods=["POST"])
 def post_cards_to_board(board_id):
     pass

@@ -11,15 +11,15 @@ class Card(db.Model):
 
     def to_dict(self):
         card_dict = {}
-        card_dict = dict(id=self.id,
+        card_dict = dict(card_id=self.card_id,
                          message=self.message,
-                         likes=self.likes_count,
+                         likes_count=self.likes_count,
                          board_id=self.board_id)
         return card_dict
 
     @classmethod
     def from_dict(cls, dict_data):
-        request_task = cls(message=dict_data["message"],
+        request_card = cls(message=dict_data["message"],
                            likes_count=dict_data["likes_count"],
                            board_id=dict_data["board_id"])
-        return request_task
+        return request_card
