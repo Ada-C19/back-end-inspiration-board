@@ -25,7 +25,9 @@ def post_card_to_board(board_id):
 # READ
 @board_bp.route("", methods=["GET"])
 def get_all_boards(): 
-    pass
+    boards = Board.query.all()
+    boards_response = [board.to_dict() for board in boards]
+    return jsonify(boards_response), 200
 
 
 @board_bp.route("</board_id>", methods=["GET"])
