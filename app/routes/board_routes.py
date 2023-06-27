@@ -75,3 +75,20 @@ def delete_boards(board_id):
     db.session.commit()
 
     return jsonify({"details": f'Board {board_id} "{board.title}"successfully deleted'}), 200
+
+
+@boards_bp.route("/<model_id>", methods=["PATCH"])
+def update_boards(model_id):
+    board = validate(Board, model_id)
+    title = request.get_json()["title"]
+    owner = request.get_json()["owner"]
+    board.title = title
+    board.owner = owner
+
+    validate_board(board)
+
+    db.session.commit()
+
+    response_body = dict(board=board.to_dict())
+
+    return jsonify(response_body), 200
