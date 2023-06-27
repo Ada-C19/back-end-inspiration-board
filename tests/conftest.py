@@ -13,7 +13,7 @@ def app():
     @request_finished.connect_via(app)
     def expire_session(sender, response, **extra):
         db.session.remove()
-    
+
     with app.app_context():
         db.create_all()
         yield app
@@ -31,6 +31,7 @@ def client(app):
 @pytest.fixture
 def one_board(app):
     new_board = Board(
-        title="Music Lovin'", owner="Da Goat")
+        title="Movie Lovers", owner="Amethyst")
     db.session.add(new_board)
     db.session.commit()
+
