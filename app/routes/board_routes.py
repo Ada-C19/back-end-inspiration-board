@@ -24,7 +24,9 @@ def create_board():
 # displays all boards
 @board_bp.route("", methods=["GET"])
 def get_all_boards():
-    pass
+    boards = Board.query.all()
+    board_response = [board.to_dict() for board in boards]
+    return jsonify(board_response)
 
 # displays all cards for one board
 @board_bp.route("/<board_id>", methods=["GET"])
