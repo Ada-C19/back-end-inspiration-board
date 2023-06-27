@@ -45,6 +45,12 @@ def read_all_cards():
 
     return jsonify(cards_response)
 
+    # 1. Alter route to expect a board id
+# 2. validate board and return respective board
+# 3. Loop through board.cards
+# 4. Append dict representation of card to card response
+# 5. Send card response in response body
+
 
 @card_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
