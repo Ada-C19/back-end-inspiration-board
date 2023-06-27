@@ -43,3 +43,21 @@ def get_cards_for_specific_board(board_id):
         ())
 
     return jsonify(boards_cards), 200
+
+# route to post new card to a specific board
+@boards_bp.route("/<board_id>/cards", methods=["POST"])
+def post_cards_for_specific_board(board_id):
+    """
+    "message": ...,
+    "likes_count": ...,
+    "board_id": ...
+}
+    """
+    request_body = request.get_json()
+    new_card = Card.from_dict_cards(request_body)
+
+    db.session.add(new_card)
+    db.session.commit()
+
+    return jsonify(new_card.to_dict_cards()), 201
+
