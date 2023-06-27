@@ -5,7 +5,7 @@ from app.models.card import Card
 
 bp = Blueprint('boards', __name__, url_prefix="/boards")
 
-# create a board endpoint and returns 201 if successful
+# create a board endpoint, returns 201 if successful
 @bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
@@ -15,7 +15,7 @@ def create_board():
     db.session.add(new_board)
     db.session.commit()
 
-    return jsonify({"goal": new_board.to_dict()}), 201
+    return jsonify({"board": new_board.to_dict()}), 201
 
 def validate_model(cls, model_id):
     try: 
@@ -57,5 +57,21 @@ def retrieve_cards(board_id):
     for card in board.cards:
         cards_response.append(card.to_dict())
     return jsonify(cards_response), 200
+
+# assign cards to a board
+@bp.route("/<board_id>/cards", methods=["POST"])
+def assign_cards_to_board(board_id):
+    board = validate_model(Board, board_id)
+    
+    request_body = request.get_json()
+
+    # validate each card id prior to adding to board.cards
+    for card_id in request_body["card_ids"]:
+        card = validate_model(Card, card_id)
+        board.cards.append(card)
+    
+    db.session.commit()
+
+    return jsonify({"board_id": board.id, "card_ids": [card.id for card in board.cards]})
 
 
