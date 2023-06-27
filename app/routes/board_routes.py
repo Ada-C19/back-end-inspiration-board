@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.board import Board
 from app.models.card import Card
-from .routes_helper import validate
+from .routes_helper import validate, validate_card, validate_board
 
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
@@ -40,26 +40,21 @@ def get_one_board(model_id):
     return jsonify(response_body), 200
 
 
-# @boards_bp.route("/<model_id>/cards", methods=["POST"])
-# def add_card_by_goal_id(model_id):
-#     board = validate(Board, model_id)
-#     request_body = request.get_json()
+@boards_bp.route("/<model_id>/card", methods=["POST"])
+def add_card_by_goal_id(model_id):
+    board = validate(Board, model_id)
+    card = Card.from_dict(request.get_json())
+    validate_card(card)
 
-#     card_ids = request_body.get_json()
-#     for card_id in card_ids:
-#         card = validate(Card, card_id)
-#         card.model_id = board.model_id
+    card.board_id = model_id
 
-#         db.session.commit()
+    db.session.add(card)
 
-#     card_ids = [card.card_id for card in board.cards]
+    db.session.commit()
 
-#     response_body = {
-#         "model_id" : board.model_id,
-#         "card_ids" : card_ids
-#     }
+    response_body = dict(card=card.to_dict())
 
-#     return make_response(response_body), 200
+    return jsonify(response_body), 200
 
 
 # @boards_bp.route("/<model_id>/cards", methods=["GET"])
