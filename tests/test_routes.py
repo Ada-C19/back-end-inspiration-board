@@ -49,13 +49,13 @@ def test_get_board_one_saved_board(client, one_board):
     # Assert
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == {
-        "board": {
+    assert response_body == [
+        {
             "id": 1,
             "title": "Movie Lovers",
             "owner": "Amethyst"
         }
-    }
+    ]
 
 
 # @pytest.mark.skip
@@ -67,13 +67,13 @@ def test_get_board_by_id(client, one_board):
     # Assert
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == [{
+    assert response_body == {
         "board": {
             "id": 1,
             "title": "Movie Lovers",
             "owner": "Amethyst"
         }
-    }]
+    }
 
 
 # @pytest.mark.skip
@@ -104,11 +104,17 @@ def test_get_400_error_with_invalid_id(client, one_board):
 
 # CARD TESTS
 # @pytest.mark.skip
-def test_get_cards_no_saved_card(client, one_board):
+def test_get_card(client, one_card):
     # Act
-    response = client.get("/boards/1/cards")
+    response = client.get("/cards")
     response_body = response.get_json()
 
     # Assert
     assert response.status_code == 200
-    assert response_body == []
+    assert len(response_body) == 1
+    assert response_body == [
+        {
+            "message": "Taylor Swift - Dear John!!! Get out my face, you stupid, man",
+            "likes_count": 0
+        }
+    ]
