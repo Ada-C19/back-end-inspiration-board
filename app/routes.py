@@ -24,7 +24,7 @@ def read_all_boards():
 def read_board_by_id(board_id):
     board = validate_model(Board, board_id)     # helper function validate id and return board dict
     
-    return (f"board #${board_id}: ${make_board_dict(board)}")     # returns board # in dict form
+    return (f"board ${board_id}: ${make_board_dict(board)}")     # returns board # in dict form
 
 # GET - Read ALL CARDS by Board id
 @board_bp.route("/<board_id>/cards", methods = ["GET"])
@@ -59,7 +59,7 @@ def read_all_cards():
 def read_card_by_id(card_id):
     card = validate_model(card_id)
     
-    return (f"card #${card_id}: ${make_card_dict(card)}")       # returns card # in dict form
+    return (f"{card_id}: ${make_card_dict(card)}")       # returns card # in dict form
     
 
 
@@ -98,6 +98,7 @@ def validate_model(cls, model_id):
 #       Returns: board dictionary
 def make_board_dict(board):
     return dict(
+        id=board.board_id,
         title=board.title,
         owner=board.owner)
 
