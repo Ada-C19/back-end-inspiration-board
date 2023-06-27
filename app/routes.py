@@ -4,12 +4,8 @@ from app.models.board import Board
 from app.models.card import Card
 
 # example_bp = Blueprint('example_bp', __name__)
-<<<<<<< HEAD
 board_bp = Blueprint("boards", __name__, url_prefix = "/boards")
 card_bp = Blueprint("cards", __name__, url_prefix = "/cards")
-=======
-board_bp = Blueprint("boards", __name__, url_prefix="/boards")
->>>>>>> 3967b713ae3a109dbf43772dee7ecb8ee47f5bc5
 
 #####   ---   BOARD ROUTES   -   #####
 #  GET - Read ALL boards
@@ -17,13 +13,13 @@ board_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
 @board_bp.route("", methods=["GET"])
 def read_all_boards():
-    boards_response = []                # initialize list to hold all boards returned
-    boards = board.query.all()         # call to get all boards
+    boards_response = []               # initialize list to hold all boards returned
+    boards = Board.query.all()         # call to get all Boards
 
     # calls make_board_dict helper function to populate Board class attributes for each board and appends to the list
     boards_response = [make_board_dict(board)for board in boards]
 
-    return jsonify(boards_response)     # returns jsonify response
+    return jsonify(boards_response)     # returns jsonify boards response
 
 # GET - Read ONE board
 @board_bp.route("/<board_id>", methods = ["GET"])
@@ -37,9 +33,21 @@ def read_board_by_id(board_id):
 #   GET - Read ALL cards
 @card_bp.route("", methods = ["GET"])
 def read_all_cards():
+    cards_response = []                 # initialize list to hold all cards returned
+    cards = Card.query.all()            # call to get all Cards
 
+    # calls make_card_dict() to populate Card class attributes for each card and appends to list
+    cards_response = [make_card_dict(card) for card in cards]
 
+    return jsonify(cards_response)      # returns jsonify cards response
+    
 #   GET - Read ONE card
+@card_bp.route("/<card_id>", methods = ["GET"])
+def read_card_by_id(card_id):
+    card = validate_model(card_id)
+    
+    return (f"card #${card_id}: ${make_card_dict(card)}")       # returns card # in dict form
+    
 
 
 #   GET - Read 
@@ -72,3 +80,14 @@ def make_board_dict(board):
     return dict(
         title=board.title,
         owner=board.owner)
+
+
+# Make Card into Dictionary
+# note: move to Card Class
+#       Takes: card object from query
+#       Returns: card dictionary
+def make_card_dict(card):
+    return dict(
+        message = card.message,
+        likes_count = card.likes_count
+    )
