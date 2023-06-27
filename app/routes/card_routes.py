@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models import Card, Board
 
@@ -8,38 +8,35 @@ cards_bp = Blueprint ("cards_bp", __name__, url_prefix=("/cards"))
 @cards_bp.route("", methods=["POST"])
 def create_card():
     request_body = request.get_json()
-    message = request_body.get('message')
-    board_id = request_body.get('board_id')
-    
-    # try:
-    #     new_card = Card.from_dict(request_body)
-    #     db.session.add(new_card)
-    #     db.session.commit()
-    #     return jsonify(new_card.to_dict()), 201
-    # except:
-    #     response = {
-    #         "details" : "Invalid request body"
-    #     }
+    try:
+        new_card = Card.from_dict(request_body)
+        db.session.add(new_card)
+        db.session.commit()
+        return make_response(request_body, 201)
+    except KeyError:
+        response = {
+            "details" : "Invalid request body"
+        }
+
+        abort(make_response(response, 400))
+
     # if len(message) > 40:
     #     return jsonify({'error' : 'Message is too long'}), 400
+    # if not board_id or not message:
+    #     return jsonify({'error': 'Missing board_id or message'}), 400
 
-    # return jsonify(response), 400
+    # board = Board.query.get(board_id)
+    # if not board:
+    #     return jsonify({'error': 'Board not found'}), 404
 
-    if not board_id or not message:
-        return jsonify({'error': 'Missing board_id or message'}), 400
+    # if len(message) > 40:
+    #     return jsonify({'error': 'Message is too long'}), 400
 
-    board = Board.query.get(board_id)
-    if not board:
-        return jsonify({'error': 'Board not found'}), 404
+    # card = Card(message=message, board_id=board_id)
+    # db.session.add(card)
+    # db.session.commit()
 
-    if len(message) > 40:
-        return jsonify({'error': 'Message is too long'}), 400
-
-    card = Card(message=message, board_id=board_id)
-    db.session.add(card)
-    db.session.commit()
-
-    return jsonify(card.to_dict()), 201
+    # return jsonify(card.to_dict()), 201
 
 #Viewing all cards
 @cards_bp.route('', methods=['GET'])
