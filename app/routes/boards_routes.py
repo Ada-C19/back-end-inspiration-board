@@ -8,14 +8,13 @@ boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
 #route to get all boards
 @boards_bp.route("",methods=["GET"])
-def read_all_boards():
+def get_all_boards():
     boards = Board.query.all()
     board_response = []
     for board in boards:
         board_response.append(board.todict())
     
     return jsonify(board_response), 200
-
 
 @boards_bp.route("", methods=["POST"])
 def create_board():
@@ -30,8 +29,8 @@ def create_board():
     return make_response(jsonify({"board": new_board.to_dict_boards()}),201)
 
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
-def get_cards_for_specific_board(board_id):
-
+def get_cards_for_specific_board(cls, board_id):
+    board = cls.query.get(board_id)
     boards_cards = {
         "id": board.board_id,
         "title": board.title,
@@ -56,7 +55,7 @@ def post_cards_for_specific_board(board_id):
     request_body = request.get_json()
     new_card = Card.from_dict_cards(request_body)
 
-    db.session.add(new_card)
+    # db.session.add(new_card)
     db.session.commit()
 
     return jsonify(new_card.to_dict_cards()), 201
