@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
-from app.models import Card, Board
+from app.models.card import Card
+
 
 cards_bp = Blueprint ("cards_bp", __name__, url_prefix=("/cards"))
 
@@ -48,7 +49,7 @@ def view_all_cards():
     return jsonify(card_response)
 
 #Deleting a card
-@cards_bp.route("</card_id>", methods=["DELETE"])
+@cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
     card = Card.query.get(card_id)
     if not card:

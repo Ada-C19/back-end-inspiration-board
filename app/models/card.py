@@ -15,6 +15,6 @@ class Card(db.Model):
     @classmethod
     def from_dict(cls,request_body):
         return cls(
-            messge = request_body["message"],
+            message = request_body["message"],
             likes_count= request_body["likes_count"]
         )
