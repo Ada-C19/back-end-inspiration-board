@@ -66,25 +66,25 @@ def three_cards(app):
 @pytest.fixture
 def one_board(app):
     new_board = Board(
-        title="test title", 
-        owner="test owner")
+        title="First Title",
+        owner="First Owner")
     db.session.add(new_board)
     db.session.commit()
 
 
 @pytest.fixture
 def three_boards(app):
-        db.session.add_all([  
+        db.session.add_all([
         Board(
-            title="First title", 
+            title="First Title",
             owner="First Owner"
         ),
         Board(
-            title="Second title",
+            title="Second Title",
             owner="Second Owner"
         ),
         Board(
-            title="Third title",
+            title="Third Title",
             owner="Third Owner"
         )
         ])
