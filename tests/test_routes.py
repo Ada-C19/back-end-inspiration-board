@@ -35,3 +35,18 @@ def test_create_board_no_data(client):
 
     assert response_body == {"message": "Board input data incomplete"}
     assert response.status_code == 400
+
+def test_get_all_boards_with_no_records(client):
+    response = client.get('/boards')
+    response_body = response.get_json()
+
+    assert response_body  == []
+    assert response.status_code == 200
+
+def test_get_all_boards_with_two_boards(client, two_saved_boards):
+    response = client.get('/boards')
+    response_body = response.get_json()
+
+    assert response_body == [{"id" : 1, "owner" : "Lindsay", "title" : "Shroomies"}, 
+    {"id": 2, "owner": "Stacy", "title":"idk"}]
+    assert response.status_code == 200
