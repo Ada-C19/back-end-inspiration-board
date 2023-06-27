@@ -173,7 +173,12 @@ def test_get_404_error_to_delete_board_not_found(client, one_board):
 
 ###### CARD TESTS ######
 
-# @pytest.mark.skip
+@pytest.mark.skip
+def test_create_card(client):
+    pass
+
+
+@pytest.mark.skip
 def test_get_card(client, one_card):
     # Act
     response = client.get("/cards")

@@ -15,7 +15,7 @@ def read_all_boards():
     boards = Board.query.all()         # call to get all Boards
 
     # calls make_board_dict helper function to populate Board class attributes for each board and appends to the list
-    boards_response = [make_board_dict(board)for board in boards]
+    boards_response = [make_board_dict(board) for board in boards]
 
     return jsonify(boards_response)     # returns jsonify boards response
 
