@@ -5,7 +5,6 @@ class Board(db.Model):
     title = db.Column(db.String(255), nullable=False)
     owner= db.Column(db.String(255), nullable=False)
     cards = db.relationship("Card", back_populates="board")
-
     def to_dict(self):
         cards_data = []
         if self.cards:
@@ -23,3 +22,4 @@ class Board(db.Model):
             title = data_dict["title"],
             owner= data_dict["owner"]
         )
+        
