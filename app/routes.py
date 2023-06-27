@@ -26,6 +26,21 @@ def read_board_by_id(board_id):
     
     return (f"board #${board_id}: ${make_board_dict(board)}")     # returns board # in dict form
 
+# GET - Read ALL CARDS by Board id
+@board_bp.route("/<board_id>/cards", methods = ["GET"])
+def read_cards_by_board_id(board_id):
+    cards_response = []
+    board = validate_model(Board, board_id)
+
+    cards_response = [make_card_dict(card) for card in board.cards]
+
+    return jsonify ({
+        "board id": board["id"],
+        "board title": board["title"],
+        "cards": cards_response
+    })
+
+
 
 #####   ---   CARD ROUTES   -   #####
 #   GET - Read ALL cards
@@ -48,10 +63,6 @@ def read_card_by_id(card_id):
     
 
 
-#   GET - Read 
-
-
-
 #DELETE - Delete ONE card
 @card_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
 def delete_card_by_id(card_id):
@@ -59,6 +70,8 @@ def delete_card_by_id(card_id):
     db.session.delete(card)
     db.session.commit()
     return abort(make_response({"details":f"Card {card.card_id} successfully deleted"}))
+
+
 
 #####   ---   HELPER FUNCTIONS   -   #####
 
