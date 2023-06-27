@@ -5,7 +5,7 @@ from app.models.card import Card
 
 bp = Blueprint('boards', __name__, url_prefix="/boards")
 
-# create a goal endpoint
+# create a board endpoint and returns 201 if successful
 @bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
