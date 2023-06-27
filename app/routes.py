@@ -23,8 +23,9 @@ def read_all_boards():
 @board_bp.route("/<board_id>", methods = ["GET"])
 def read_board_by_id(board_id):
     board = validate_model(Board, board_id)     # helper function validate id and return board dict
-    
-    return (f"board ${board_id}: ${make_board_dict(board)}")     # returns board # in dict form
+
+    print("****** ", make_board_dict(board), " ******")
+    return make_board_dict(board), 200    # returns board in dict form
 
 # GET - Read ALL CARDS by Board id
 @board_bp.route("/<board_id>/cards", methods = ["GET"])
@@ -51,7 +52,7 @@ def read_all_cards():
 
     # calls make_card_dict() to populate Card class attributes for each card and appends to list
     cards_response = [make_card_dict(card) for card in cards]
-
+    
     return jsonify(cards_response)      # returns jsonify cards response
     
 #   GET - Read ONE card
