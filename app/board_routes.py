@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
-from route_helpers import create_model, validate_model
+from route_helpers import create_model, validate_model, update_model
 from models.board import Board
 from models.card import Card
 
@@ -39,9 +39,13 @@ def get_cards_from_board():
     pass
 
 # UPDATE
-@board_bp.route("", methods=["PUT"])
-def update_board():
-    pass
+@board_bp.route("/<board_id>", methods=["PUT"])
+def update_board(board_id):
+    board = validate_model(Board, board_id)
+    request_body = request.get_json()
+    update_model(board, request_body)
+    db.session.commit()
+    return make_response({"board": board.to_dict()}, 200)
 
 
 # DELETE
