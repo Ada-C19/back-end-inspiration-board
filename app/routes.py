@@ -1,23 +1,29 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
-from app.models.board import Card
+from app.models.card import Card
 
 # example_bp = Blueprint('example_bp', __name__)
+<<<<<<< HEAD
 board_bp = Blueprint("boards", __name__, url_prefix = "/boards")
 card_bp = Blueprint("cards", __name__, url_prefix = "/cards")
+=======
+board_bp = Blueprint("boards", __name__, url_prefix="/boards")
+>>>>>>> 3967b713ae3a109dbf43772dee7ecb8ee47f5bc5
 
 #####   ---   BOARD ROUTES   -   #####
 #  GET - Read ALL boards
-@board_bp.route("", methods = ["GET"])
+
+
+@board_bp.route("", methods=["GET"])
 def read_all_boards():
     boards_response = []                # initialize list to hold all boards returned
-    boards = boards.query.all()         # call to get all boards
+    boards = board.query.all()         # call to get all boards
 
     # calls make_board_dict helper function to populate Board class attributes for each board and appends to the list
-    boards_response = [make_board_dict(board)for board in boards]       
+    boards_response = [make_board_dict(board)for board in boards]
 
-    return jsonify(boards_response)     # returns jsonify response 
+    return jsonify(boards_response)     # returns jsonify response
 
 # GET - Read ONE board
 @board_bp.route("/<board_id>", methods = ["GET"])
@@ -41,18 +47,20 @@ def read_all_cards():
 
 #####   ---   HELPER FUNCTIONS   -   #####
 
-# Validate Model ID 
+# Validate Model ID
 # Takes: Model Class Name, Class Infor from query
 def validate_model(cls, model_id):
     try:
         model_id = int(model_id)
     except ValueError:
-        abort(make_response({"message": f"{model_id} is not a valid type. A {(type(model_id))} data type was provided. Must be a valid integer data type."},400))
-    
+        abort(make_response(
+            {"message": f"{model_id} is not a valid type. A {(type(model_id))} data type was provided. Must be a valid integer data type."}, 400))
+
     model = cls.query.get(model_id)
     if not model:
-        abort(make_response({"message" : f"{cls.__name__} {model_id} does not exist"},404))
-    
+        abort(make_response(
+            {"message": f"{cls.__name__} {model_id} does not exist"}, 404))
+
     return model
 
 
@@ -62,5 +70,5 @@ def validate_model(cls, model_id):
 #       Returns: board dictionary
 def make_board_dict(board):
     return dict(
-        title = board.title,
-        owner = board.owner)
+        title=board.title,
+        owner=board.owner)

@@ -1,6 +1,8 @@
 import pytest
 from app import create_app
 from app import db
+from app.models.board import Board
+# from flask.signals import request_finished
 
 
 @pytest.fixture
@@ -20,3 +22,11 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture
+def one_board(app):
+    new_board = Board(
+        title="Music Lovin'", owner="Da Goat")
+    db.session.add(new_board)
+    db.session.commit()
