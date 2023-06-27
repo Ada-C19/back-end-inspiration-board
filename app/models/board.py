@@ -6,3 +6,9 @@ class Board(db.Model):
     owner = db.Column(db.String)
     cards = db.relationship('Card', back_populates='board', lazy=True)
     
+    @classmethod
+    def from_dict(cls, data_dict):
+        return cls(
+            title = data_dict['title'],
+            owner = data_dict['title'],
+        )
