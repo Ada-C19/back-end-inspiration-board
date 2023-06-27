@@ -10,11 +10,26 @@ import os
 # example_bp = Blueprint('example_bp', __name__)
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
-# validate board input
-def validate_model_boards(cls, board_id):
+# validate input
+def validate_model(cls, model_id):
     try:
-        board_id = int(board_id)
+        model_id = int(model_id)
     except:
-        abort(make_response({"message": f"{cls.__name__} {board_id} invalid"}, 400))
+        abort(make_response({"message": f"{cls.__name__} {model_id} invalid"}, 400))
     
-    board = cls.query.get(board_id)
+    model = cls.query.get(model_id)
+    
+    if not model:
+        abort(make_response({"message": f"board {model_id} not found"}))
+    
+
+@boards_bp.route("", methods=["POST"])
+def create_board():
+    request_body = request.get_json()
+    new_board = Board.board_from_dict(request_body)
+    # new_board = Board(title=request_body["title"], owner=request_body["owner"])
+
+    db.session.add(new_board)
+    db.session.commit()
+
+    return make_response(jsonify(f"{new_board} successfully created!"), 201)
