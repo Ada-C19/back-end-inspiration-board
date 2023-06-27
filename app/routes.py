@@ -9,17 +9,15 @@ card_bp = Blueprint("cards", __name__, url_prefix = "/cards")
 
 #####   ---   BOARD ROUTES   -   #####
 #  GET - Read ALL boards
-
-
 @board_bp.route("", methods=["GET"])
 def read_all_boards():
-    boards_response = []                # initialize list to hold all boards returned
-    boards = Board.query.all()         # call to get all boards
+    boards_response = []               # initialize list to hold all boards returned
+    boards = Board.query.all()         # call to get all Boards
 
     # calls make_board_dict helper function to populate Board class attributes for each board and appends to the list
     boards_response = [make_board_dict(board)for board in boards]
 
-    return jsonify(boards_response)     # returns jsonify response
+    return jsonify(boards_response)     # returns jsonify boards response
 
 # GET - Read ONE board
 @board_bp.route("/<board_id>", methods = ["GET"])
@@ -28,29 +26,52 @@ def read_board_by_id(board_id):
     
     return (f"board #${board_id}: ${make_board_dict(board)}")     # returns board # in dict form
 
+# GET - Read ALL CARDS by Board id
+@board_bp.route("/<board_id>/cards", methods = ["GET"])
+def read_cards_by_board_id(board_id):
+    cards_response = []
+    board = validate_model(Board, board_id)
+
+    cards_response = [make_card_dict(card) for card in board.cards]
+
+    return jsonify ({
+        "board id": board["id"],
+        "board title": board["title"],
+        "cards": cards_response
+    })
+
+
 
 #####   ---   CARD ROUTES   -   #####
 #   GET - Read ALL cards
 @card_bp.route("", methods = ["GET"])
 def read_all_cards():
-    pass
+    cards_response = []                 # initialize list to hold all cards returned
+    cards = Card.query.all()            # call to get all Cards
 
+    # calls make_card_dict() to populate Card class attributes for each card and appends to list
+    cards_response = [make_card_dict(card) for card in cards]
 
+    return jsonify(cards_response)      # returns jsonify cards response
+    
 #   GET - Read ONE card
-
-
-#   GET - Read 
-
+@card_bp.route("/<card_id>", methods = ["GET"])
+def read_card_by_id(card_id):
+    card = validate_model(card_id)
+    
+    return (f"card #${card_id}: ${make_card_dict(card)}")       # returns card # in dict form
+    
 
 
 #DELETE - Delete ONE card
-
 @card_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
 def delete_card_by_id(card_id):
     card = validate_model(Card, card_id)
     db.session.delete(card)
     db.session.commit()
     return abort(make_response({"details":f"Card {card.card_id} successfully deleted"}))
+
+
 
 #####   ---   HELPER FUNCTIONS   -   #####
 
@@ -79,3 +100,14 @@ def make_board_dict(board):
     return dict(
         title=board.title,
         owner=board.owner)
+
+
+# Make Card into Dictionary
+# note: move to Card Class
+#       Takes: card object from query
+#       Returns: card dictionary
+def make_card_dict(card):
+    return dict(
+        message = card.message,
+        likes_count = card.likes_count
+    )
