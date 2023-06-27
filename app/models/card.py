@@ -7,14 +7,14 @@ class Card(db.Model):
     board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'))
     board = db.relationship("Board", back_populates="cards")
 
-def to_dict(self):
-    return ({"card_id": self.card_id,
-            "message": self.message,
-            "likes_count": self.likes_count})
+    def to_dict(self):
+        return ({"card_id": self.card_id,
+                "message": self.message,
+                "likes_count": self.likes_count})
 
-@classmethod
-def from_dict(cls,request_body):
-    return cls(
-        messge = request_body["message"],
-        likes_count= request_body["likes_count"]
-    )
+    @classmethod
+    def from_dict(cls,request_body):
+        return cls(
+            message = request_body["message"],
+            likes_count= request_body["likes_count"]
+        )
