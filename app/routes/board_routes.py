@@ -74,6 +74,8 @@ def create_card(board_id):
     try:
         new_card = Card.from_dict(request_body)
         new_card.board = board
+        if len(new_card.message) > 40:
+            return make_response({"Error": "Expected length exceeded"})
 
         db.session.add(new_card)
         db.session.commit()

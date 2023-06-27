@@ -11,6 +11,8 @@ def create_card():
     request_body = request.get_json()
     try:
         new_card = Card.from_dict(request_body)
+        if len(new_card.message) > 40:
+            return make_response({"Error": "Expected length exceeded"})
         db.session.add(new_card)
         db.session.commit()
         return make_response(request_body, 201)
@@ -21,25 +23,7 @@ def create_card():
 
         abort(make_response(response, 400))
 
-    # if len(message) > 40:
-    #     return jsonify({'error' : 'Message is too long'}), 400
-    # if not board_id or not message:
-    #     return jsonify({'error': 'Missing board_id or message'}), 400
-
-    # board = Board.query.get(board_id)
-    # if not board:
-    #     return jsonify({'error': 'Board not found'}), 404
-
-    # if len(message) > 40:
-    #     return jsonify({'error': 'Message is too long'}), 400
-
-    # card = Card(message=message, board_id=board_id)
-    # db.session.add(card)
-    # db.session.commit()
-
-    # return jsonify(card.to_dict()), 201
-
-#Viewing all cards
+   
 @cards_bp.route('', methods=['GET'])
 def view_all_cards():
     cards = Card.query.all()
