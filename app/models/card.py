@@ -8,3 +8,9 @@ class Card(db.Model):
     board = db.relationship("Board", back_populates="cards", lazy=True)
     board_id = db.Column(db.Integer, db.ForeignKey(
         "board.board_id", ), nullable=True)
+
+def to_dict(self)
+    def to_dict(self):
+            "id": self.id,
+            "message": self.self,
+          

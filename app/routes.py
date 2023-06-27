@@ -62,7 +62,22 @@ def read_card_by_id(card_id):
     
     return (f"{card_id}: ${make_card_dict(card)}")       # returns card # in dict form
     
+# CREATE - Create one card
 
+@cards_bp.route("", methods=["POST"])
+def create_new_card():
+    request_body = request.get_json()
+    new_card = Card.from_dict(request_body)
+    
+    db.session.add(new_card)
+    db.session.commit()
+
+    return jsonify(f"Card {new_card.name} successfully created for your message!"), 201
+
+#CREATE - Create card for board 
+#@card_bp.route("/<board_id>/<card_id>", methods="POST")
+#def create_new_card(board.id):
+    #new_board_card = Card.from_dict(request_body)
 
 #DELETE - Delete ONE card
 @card_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
