@@ -21,6 +21,8 @@ def read_all_boards():
 def create_board():
     request_body = request.get_json()
     
+    new_board = Board.from_dict_boards(request_body)
+    
     db.session.add(new_board)
     db.session.commit()
 
