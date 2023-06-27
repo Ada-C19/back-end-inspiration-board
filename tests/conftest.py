@@ -41,9 +41,19 @@ def one_board(app):
 
 
 @pytest.fixture
-def one_card_on_board(app, one_board):
+def one_card(app):
     new_card = Card(
         message="Taylor Swift - Dear John!!! Get out my face, you stupid, man",
         likes_count=0,
-        board_id=one_board.id
     )
+    
+    db.session.add(new_card)
+    db.session.commit()
+
+
+@pytest.fixture
+def one_board_with_one_card(app, one_board, one_card):
+    card = Card.query.first()
+    board = Board.query.first()
+    board.cards.append(card)
+    db.session.commit()

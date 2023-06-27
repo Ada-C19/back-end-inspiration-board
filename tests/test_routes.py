@@ -1,4 +1,5 @@
 from app.models.board import Board
+from app.models.card import Card
 import pytest
 
 
@@ -48,13 +49,13 @@ def test_get_board_one_saved_board(client, one_board):
     # Assert
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == [{
+    assert response_body == {
         "board": {
             "id": 1,
             "title": "Movie Lovers",
             "owner": "Amethyst"
         }
-    }]
+    }
 
 
 # @pytest.mark.skip
@@ -102,3 +103,12 @@ def test_get_400_error_with_invalid_id(client, one_board):
 
 
 # CARD TESTS
+# @pytest.mark.skip
+def test_get_cards_no_saved_card(client, one_board):
+    # Act
+    response = client.get("/boards/1/cards")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert response_body == []
