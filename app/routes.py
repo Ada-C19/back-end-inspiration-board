@@ -51,6 +51,15 @@ def read_card_by_id(card_id):
 #   GET - Read 
 
 
+
+#DELETE - Delete ONE card
+@card_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
+def delete_card_by_id(card_id):
+    card = validate_model(Card, card_id)
+    db.session.delete(card)
+    db.session.commit()
+    return abort(make_response({"details":f"Card {card.card_id} successfully deleted"}))
+
 #####   ---   HELPER FUNCTIONS   -   #####
 
 # Validate Model ID
