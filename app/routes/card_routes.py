@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.card import Card
+from app.models.board import Board
+from app.routes.board_routes import board_bp
 
-# example_bp = Blueprint('example_bp', __name__)
+
 card_bp = Blueprint("cards", __name__, url_prefix="/cards")
-
+### Validate model ###
 def validate_model(cls, model_id):
     try:
         model_id = int(model_id)
@@ -19,39 +21,55 @@ def validate_model(cls, model_id):
     return model    
 
 
-@card_bp.route("", methods=["POST"])
-def create_card():
+### Post a new card under a board ###
+@board_bp.route("/<board_id>/cards", methods = ["POST"])
+def create_card_by_board_id(board_id):
+
+    board = validate_model(Board, board_id)
+
     request_body = request.get_json()
 
-    new_card = Card.from_dict(request_body)
+    new_card = Card(
+        message=request_body["message"],
+        liked_count=request_body["liked_count"],
+        board=board
+    )
 
     db.session.add(new_card)
     db.session.commit()
 
-    return jsonify(new_card.to_dict()), 201
+    return jsonify(f"Card {new_card.card_id} under {new_card.board.title} was successfully created."), 201
 
 
-@card_bp.route("", methods=["GET"])
-def read_all_cards():
-    board_query = request.args.get("board")
+### Get all cards from a board ###
+@board_bp.route("/<board_id>/cards", methods=["GET"])
+def get_all_cards_with_board_id(board_id):
+    board = validate_model(Board, board_id)
 
-    if board_query:
-        cards = Card.query.filter_by(board=board_query)
+    card_response = []
 
-    cards_response = []
+    for card in board.cards:
+        card_response.append(card.to_dict())
 
-    for card in cards:
-        cards_response.append(card.to_dict())
-
-    return jsonify(cards_response)
-
-    # 1. Alter route to expect a board id
-# 2. validate board and return respective board
-# 3. Loop through board.cards
-# 4. Append dict representation of card to card response
-# 5. Send card response in response body
+    return jsonify(card_response),200
 
 
+### Update liked_count by card ###
+@card_bp.route('/<card_id>', methods=['PATCH'])
+def update_liked_count(card_id):
+    card = validate_model(Card, card_id)
+
+    if not card.liked_count:
+        card.liked_count = 0
+
+    card.liked_count = card.liked_count + 1
+
+    db.session.commit()
+
+    return card.to_dict(), 200
+
+
+### Delete card ###
 @card_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
     card = validate_model(Card, card_id)
