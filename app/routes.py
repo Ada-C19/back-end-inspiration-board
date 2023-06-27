@@ -4,12 +4,8 @@ from app.models.board import Board
 from app.models.card import Card
 
 # example_bp = Blueprint('example_bp', __name__)
-<<<<<<< HEAD
 board_bp = Blueprint("boards", __name__, url_prefix = "/boards")
 card_bp = Blueprint("cards", __name__, url_prefix = "/cards")
-=======
-board_bp = Blueprint("boards", __name__, url_prefix="/boards")
->>>>>>> 3967b713ae3a109dbf43772dee7ecb8ee47f5bc5
 
 #####   ---   BOARD ROUTES   -   #####
 #  GET - Read ALL boards
