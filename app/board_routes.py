@@ -36,15 +36,20 @@ def create_board():
 @boards_bp.route('/<board_id>/cards', methods=['POST'])
 def create_card(board_id):
     board = validate_model(Board, board_id)
-    request_body = request.get_json 
+    request_body = request.get_json()
     message = request_body.get("message")
 
     if validate_message(message):
         return validate_message()
     
-    card = Card(message=message)
+    card = Card(message=message, likes_count=0, board_id=board.board_id)
 
     db.session.add(card)
     db.session.commit()
 
-    return make_response({"id": board.board_id, "card_ids":request_body["card_ids"]}), 200
+    return make_response({"id": board.board_id, "card_id": card.card_id}), 200
+
+
+cards_bp = Blueprint('goals', __name__, url_prefix='/cards')
+
+
