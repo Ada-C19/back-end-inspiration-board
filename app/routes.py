@@ -3,6 +3,7 @@ from app import db
 from app.models.board import Board
 from app.models.card import Card
 
+
 # Helper Functions:
 def validate_model(model_class, model_id):
     try:
@@ -83,3 +84,11 @@ def delete_card(card_id):
     db.session.commit()
 
     return jsonify('Card successfully deleted'), 201
+
+# Possible other routes:
+# get board by id
+# delete board and associated cards --- use cascading
+# update board
+# get all cards
+# update card
+# get card by id for board by id?
