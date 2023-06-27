@@ -49,13 +49,13 @@ def test_get_board_one_saved_board(client, one_board):
     # Assert
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == [{
-        "board": {
+    assert response_body == [
+        {
             "id": 1,
             "title": "Movie Lovers",
             "owner": "Amethyst"
         }
-    }]
+    ]
 
 
 # @pytest.mark.skip
