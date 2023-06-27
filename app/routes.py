@@ -5,6 +5,7 @@ from app.models.board import Card
 
 # example_bp = Blueprint('example_bp', __name__)
 board_bp = Blueprint("boards", __name__, url_prefix = "/boards")
+card_bp = Blueprint("cards", __name__, url_prefix = "/cards")
 
 #####   ---   BOARD ROUTES   -   #####
 #  GET - Read ALL boards
@@ -19,8 +20,23 @@ def read_all_boards():
     return jsonify(boards_response)     # returns jsonify response 
 
 # GET - Read ONE board
-def read_board():
-    board = board.query.all
+@board_bp.route("/<board_id>", methods = ["GET"])
+def read_board_by_id(board_id):
+    board = validate_model(Board, board_id)     # helper function validate id and return board dict
+    
+    return (f"board #${board_id}: ${make_board_dict(board)}")     # returns board # in dict form
+
+
+#####   ---   CARD ROUTES   -   #####
+#   GET - Read ALL cards
+@card_bp.route("", methods = ["GET"])
+def read_all_cards():
+
+
+#   GET - Read ONE card
+
+
+#   GET - Read 
 
 
 #####   ---   HELPER FUNCTIONS   -   #####
