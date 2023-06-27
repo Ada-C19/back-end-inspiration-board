@@ -3,6 +3,32 @@ import pytest
 
 
 # BOARD TESTS
+# @pytest.mark.skip(reason="No way to test this feature yet")
+def test_create_board(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "Test Board",
+        "Owner": "Test User",
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 201
+    assert "board" in response_body
+    assert response_body == {
+        "board": {
+            "id": 1,
+            "board": "Test Board",
+            "Owner": "Test User",
+        }
+    }
+    new_board = Board.query.get(1)
+    assert new_task
+    assert new_board.title == "Test Board"
+    assert new_board.owner == "Test User"
+
+
+
 # @pytest.mark.skip
 def test_get_boards_no_saved_board(client):
     # Act
@@ -30,3 +56,6 @@ def test_get_board_one_saved_board(client, one_board):
             "owner": "Da Goat"
         }
     ]
+
+
+
