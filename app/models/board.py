@@ -5,4 +5,9 @@ class Board(db.Model):
     title = db.Column(db.String)
     owner = db.Column(db.String)
 
-
+    @classmethod
+    def from_dict(cls, board_data):
+        return Board(
+            title=board_data["title"],
+            owner=board_data["owner"]
+        )
