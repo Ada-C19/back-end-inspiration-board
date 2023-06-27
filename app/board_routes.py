@@ -28,9 +28,10 @@ def get_all_boards():
     pass
 
 
-@board_bp.route("", methods=["GET"])
-def get_specific_board(): 
-    pass
+@board_bp.route("</board_id>", methods=["GET"])
+def get_specific_board(board_id): 
+    board = validate_model(Board, board_id)
+    return make_response({"board": board.to_dict()}, 200)
 
 
 @board_bp.route("", methods=["GET"])
@@ -44,6 +45,9 @@ def update_board():
 
 
 # DELETE
-@board_bp.route("", methods=["DELETE"])
-def delete_board():
-    pass
+@board_bp.route("/<board_id>", methods=["DELETE"])
+def delete_board(board_id):
+    board = validate_model(Board, board_id)
+    db.session.delete(board)
+    db.session.commit()
+    return make_response({"details": f"Board {board.id} \"{board.title}\" successfully deleted"}, 200)
