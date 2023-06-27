@@ -21,6 +21,7 @@ def create_app():
     # from app.models.ExampleModel import ExampleModel
     from app.models.board import Board
     from app.models.card import Card
+    # test 1
 
     db.init_app(app)
     migrate.init_app(app, db)
