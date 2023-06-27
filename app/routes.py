@@ -9,8 +9,6 @@ card_bp = Blueprint("cards", __name__, url_prefix = "/cards")
 
 #####   ---   BOARD ROUTES   -   #####
 #  GET - Read ALL boards
-
-
 @board_bp.route("", methods=["GET"])
 def read_all_boards():
     boards_response = []               # initialize list to hold all boards returned
