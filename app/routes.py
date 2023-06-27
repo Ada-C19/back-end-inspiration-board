@@ -13,7 +13,7 @@ board_bp = Blueprint("boards", __name__, url_prefix="/boards")
 @board_bp.route("", methods=["GET"])
 def read_all_boards():
     boards_response = []                # initialize list to hold all boards returned
-    boards = board.query.all()         # call to get all boards
+    boards = Board.query.all()         # call to get all boards
 
     # calls make_board_dict helper function to populate Board class attributes for each board and appends to the list
     boards_response = [make_board_dict(board)for board in boards]
@@ -24,7 +24,7 @@ def read_all_boards():
 
 
 def read_board():
-    board = board.query.all
+    board = Board.query.all
 
 
 #####   ---   HELPER FUNCTIONS   -   #####
