@@ -72,6 +72,18 @@ def delete_card_by_id(card_id):
     db.session.commit()
     return abort(make_response({"details":f"Card {card.card_id} successfully deleted"}))
 
+# copy pasta from task-list to delete (overwrite) the dolphins
+@goals_bp.route("<goal_id>", methods=["PUT"])
+def update_goal_title(goal_id):
+    goal = validate_model(Goal, goal_id)
+    request_body = request.get_json()
+    goal.title = request_body["title"]
+    return {
+    "goal": {
+        "id": goal.goal_id,
+        "title": goal.title
+    }}
+    db.session.commit()
 
 
 #####   ---   HELPER FUNCTIONS   -   #####
