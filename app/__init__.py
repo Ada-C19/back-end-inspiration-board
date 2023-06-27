@@ -21,6 +21,10 @@ def create_app():
     # from app.models.ExampleModel import ExampleModel
     from app.models.board import Board
     from app.models.card import Card
+    from .routes.board_routes import board_bp
+    from .routes.card_routes import cards_bp
+    app.register_blueprint(board_bp)
+    app.register_blueprint(cards_bp)
     
 
 
