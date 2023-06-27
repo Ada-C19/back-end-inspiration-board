@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 class Board(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -6,7 +7,7 @@ class Board(db.Model):
     title = db.Column(db.String)
     description = db.Column(db.String)
     theme = db.Column(db.String, nullable=True)
-    date_created = db.Column(db.DateTime, nullable=True)
+    date_created = db.Column(db.DateTime)
     cards = db.relationship("Card", back_populates="board")
 
     def to_dict(self, cards=False):
@@ -30,6 +31,10 @@ class Board(db.Model):
             owner=data["owner"],
             title=data["title"],
             description=data["description"],
-            theme=data["theme"] or None,
-            date_created=data["date_created"],
+            theme=data.get("theme", None),
+            date_created=datetime.now(),
         )
+    
+    @classmethod
+    def get_required_fields(self):
+        return ["owner", "title", "description"]
