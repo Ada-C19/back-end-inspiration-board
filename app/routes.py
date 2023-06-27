@@ -25,7 +25,7 @@ def read_board_by_id(board_id):
     board = validate_model(Board, board_id)     # helper function validate id and return board dict
 
     print("****** ", make_board_dict(board), " ******")
-    return make_board_dict(board), 200    # returns board in dict form
+    return {"board": make_board_dict(board)}, 200    # returns board in dict form
 
 # GET - Read ALL CARDS by Board id
 @board_bp.route("/<board_id>/cards", methods = ["GET"])
@@ -36,8 +36,8 @@ def read_cards_by_board_id(board_id):
     cards_response = [make_card_dict(card) for card in board.cards]
 
     return jsonify ({
-        "board id": board["id"],
-        "board title": board["title"],
+        "board id": board_id,
+        "board title": board.title,
         "cards": cards_response
     })
 
@@ -87,6 +87,20 @@ def delete_card_by_id(card_id):
     db.session.commit()
     return abort(make_response({"details":f"Card {card.card_id} successfully deleted"}))
 
+# copy pasta from task-list to delete (overwrite) the dolphins
+@card_bp.route("<board_id>", methods=["PATCH"])
+def update_card_title(board_id):
+    board = validate_model(Board, board_id)
+    # request_body = request.get_json()
+    board.cards = []
+    return {
+    "board": {
+        "id": board.board_id,
+        "title": board.title,
+        "owner": board.owner,
+        "cards": []
+    }}
+    db.session.commit()
 
 
 #####   ---   HELPER FUNCTIONS   -   #####
