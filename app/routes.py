@@ -25,15 +25,18 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 @boards_bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
-    if request_body.get('owner') and request_body.get('title'):
-        new_board = Board.from_dict(request_body)
-    else:
+    try:
+        if request_body.get('owner') and request_body.get('title'):
+            new_board = Board.from_dict(request_body)
+            
+        db.session.add(new_board)
+        db.session.commit()
+
+        return jsonify(f"Board {new_board.id} successfully created."), 201
+    except:
         abort(make_response({"message": "Board input data incomplete"}, 400))
     
-    db.session.add(new_board)
-    db.session.commit()
-
-    return jsonify(f"Board {new_board.id} successfully created."), 201
+    
 
 # get all boards
 @boards_bp.route("", methods = ["GET"])
