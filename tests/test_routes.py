@@ -8,7 +8,7 @@ def test_create_board(client):
     # Act
     response = client.post("/boards", json={
         "title": "Test Board",
-        "Owner": "Test User",
+        "owner": "Test User",
     })
     response_body = response.get_json()
 
@@ -19,11 +19,11 @@ def test_create_board(client):
         "board": {
             "id": 1,
             "board": "Test Board",
-            "Owner": "Test User",
+            "owner": "Test User",
         }
     }
     new_board = Board.query.get(1)
-    assert new_task
+    assert new_board
     assert new_board.title == "Test Board"
     assert new_board.owner == "Test User"
 
