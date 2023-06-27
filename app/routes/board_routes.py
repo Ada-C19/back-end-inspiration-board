@@ -54,10 +54,10 @@ def update_board(board_id):
 
 @board_bp.route('/<board_id>', methods = ['DELETE'])
 def delete_board(board_id):
-   board = validate_model(Board,board_id)
-   db.session.delete(board)
-   db.session.commit()
-   return  {
+    board = validate_model(Board,board_id)
+    db.session.delete(board)
+    db.session.commit()
+    return  {
         "details": f'Board {board_id} "{board.title}" successfully deleted'
     }
 

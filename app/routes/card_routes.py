@@ -49,7 +49,7 @@ def view_all_cards():
     return jsonify(card_response)
 
 #Deleting a card
-@cards_bp.route("/<card_id>", methods=["DELETE"])
+@cards_bp.route("<card_id>", methods=["DELETE"])
 def delete_card(card_id):
     card = Card.query.get(card_id)
     if not card:
@@ -61,7 +61,7 @@ def delete_card(card_id):
         'details': f'Card {card.card_id} succesfully deleted'}), 200
 
 #Adding a +1
-@cards_bp.route("/<id>", methods=["PATCH"])
+@cards_bp.route("<id>", methods=["PATCH"])
 def update_card(card_id):
     # request_body = request.get_json()
     card = Card.query.get(card_id)
