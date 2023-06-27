@@ -1,4 +1,6 @@
 from app.models.board import Board
+from app.routes import validate_model
+from werkzeug.exceptions import HTTPException
 import pytest
 
 def test_create_board_no_owner(client):
@@ -90,3 +92,30 @@ def test_get_all_cards_from_board_one_with_two_cards(client, one_saved_boards_wi
     assert response_body == [{'board': 'Shroomies', 'id': 1, 'message': 'card 1 message'},
         {'board': 'Shroomies', 'id': 2, 'message': 'card 2 message'}]
     assert response.status_code == 200
+
+def test_delete_card(client, one_saved_boards_with_two_cards):
+    response = client.delete('/cards/1')
+    response_body = response.get_json()
+
+    card_response = client.get('/boards/1/cards')
+    card_response_body = card_response.get_json()
+
+    assert card_response_body == [{'board': 'Shroomies', 'id': 2, 'message': 'card 2 message'}]
+    assert response_body == "Card successfully deleted"
+    assert response.status_code == 201
+
+def test_validate_model_returns_model(two_saved_boards):
+    model_id = 1
+    model = Board
+
+    output = validate_model(model, model_id)
+
+    assert output == Board.query.get(model_id)
+
+def test_validate_model_returns_invalid_id(two_saved_boards):
+    with pytest.raises(HTTPException):
+        result = validate_model(Board, "cat")
+
+def test_validate_model_returns_not_found(two_saved_boards):
+    with pytest.raises(HTTPException):
+        result = validate_model(Board, 3)
