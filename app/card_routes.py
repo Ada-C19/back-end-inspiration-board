@@ -14,3 +14,13 @@ def delete_card(card_id):
 
     message = f'Card {card_id} successfully deleted'
     return make_response({"details":message}, 200)
+
+@cards_bp.route("/<card_id>/like", methods=["PATCH"])
+def update_likes(card_id):
+    card = validate_model(Card, card_id)
+
+    card.likes_count += 1
+
+    db.session.commit()
+    return jsonify(card.to_dict())
+
