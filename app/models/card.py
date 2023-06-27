@@ -6,3 +6,14 @@ class Card(db.Model):
     likes_count = db.Column(db.Integer)
     board_id = db.Column(db.ForeignKey("board.id"))
     board = db.relationship("Board", back_populates="cards")
+
+    @classmethod 
+    def dict_to_model(cls, data_dict):
+        return cls(message = data_dict["message"], likes_count=data_dict["likes_count"])
+    
+    def make_card_dict(self):
+        return dict(
+            message=self.message,
+            likes_count=self.likes_count,
+            board=self.board,
+        )

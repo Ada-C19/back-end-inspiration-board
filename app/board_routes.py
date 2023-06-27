@@ -19,7 +19,16 @@ def post_board():
 
 @board_bp.route("<board_id>/cards", methods=["POST"])
 def post_card_to_board(board_id):
-    pass
+    board = validate_model(Board, board_id)
+    request_body = request.get_json()
+
+    new_card = Card(
+        message=request_body["message"],
+        board = board
+    )
+    db.session.add(new_card)
+    db.session.commit()
+    return make_response(jsonify(f"{new_card.message} successfully posted on {board.title}", 201))
 
 
 # READ
