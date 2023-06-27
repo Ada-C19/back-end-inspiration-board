@@ -4,7 +4,7 @@ from app.models.board import Board
 from app.models.card import Card
 from app.helper import validate_model, validate_message
 
-boards_bp = Blueprint('goals', __name__, url_prefix='/boards')
+boards_bp = Blueprint('boards', __name__, url_prefix='/boards')
 
 @boards_bp.route('', methods=['GET'])
 def get_all_boards():
@@ -48,8 +48,4 @@ def create_card(board_id):
     db.session.commit()
 
     return make_response({"id": board.board_id, "card_id": card.card_id}), 200
-
-
-cards_bp = Blueprint('goals', __name__, url_prefix='/cards')
-
 
