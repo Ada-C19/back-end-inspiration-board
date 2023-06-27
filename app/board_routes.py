@@ -20,7 +20,7 @@ def get_one_board(board_id):
 
     return jsonify(board.to_dict())
 
-@boards_bp('', methods=['POST'])
+@boards_bp.route('', methods=['POST'])
 def create_board():
     request_body = request.get_json()
 

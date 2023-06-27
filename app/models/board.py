@@ -17,5 +17,5 @@ class Board(db.Model):
     def from_dict(cls, data_dict):
         return cls(
             title = data_dict['title'],
-            owner = data_dict['title'],
+            owner = data_dict['owner'],
         )
