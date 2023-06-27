@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
-from route_helpers import create_model, validate_model, update_model
-from models.board import Board
-from models.card import Card
+from .route_helpers import create_model, validate_model, update_model
+from app.models.board import Board
+from app.models.card import Card
 
 board_bp = Blueprint('board_bp', __name__, url_prefix="/boards")
 
@@ -17,7 +17,7 @@ def post_board():
     return make_response({"board": new_board.to_dict()}, 201)
 
 
-@board_bp.route("/<board_id>/cards", methods=["POST"])
+@board_bp.route("<board_id>/cards", methods=["POST"])
 def post_card_to_board(board_id):
     pass
 
@@ -30,18 +30,23 @@ def get_all_boards():
     return jsonify(boards_response), 200
 
 
-@board_bp.route("</board_id>", methods=["GET"])
+@board_bp.route("<board_id>", methods=["GET"])
 def get_specific_board(board_id): 
     board = validate_model(Board, board_id)
     return make_response({"board": board.to_dict()}, 200)
 
 
-@board_bp.route("", methods=["GET"])
-def get_cards_from_board():
-    pass
+@board_bp.route("<board_id>/cards", methods=["GET"])
+def get_cards_from_board(board_id):
+    board = validate_model(Board, board_id)
+    card_list = [card.to_dict() for card in board.cards]
+
+    # do we want the board though or just the cards?
+    # i could just return card.to_dict for each card in card_list 
+    return make_response(board.to_dict(), 200)
 
 # UPDATE
-@board_bp.route("/<board_id>", methods=["PUT"])
+@board_bp.route("<board_id>", methods=["PUT"])
 def update_board(board_id):
     board = validate_model(Board, board_id)
     request_body = request.get_json()
@@ -51,7 +56,7 @@ def update_board(board_id):
 
 
 # DELETE
-@board_bp.route("/<board_id>", methods=["DELETE"])
+@board_bp.route("<board_id>", methods=["DELETE"])
 def delete_board(board_id):
     board = validate_model(Board, board_id)
     db.session.delete(board)
