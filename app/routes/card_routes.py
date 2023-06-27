@@ -38,6 +38,7 @@ def get_one_card(model_id):
     response_body = dict(card=card.to_dict())
     return jsonify(response_body), 200
 
+
 @cards_bp.route("/<model_id>", methods=["DELETE"])
 def delete_cards(model_id):
     card = validate(Card, model_id)
@@ -46,3 +47,46 @@ def delete_cards(model_id):
     db.session.commit()
 
     return jsonify({"details": f'Card {model_id} "{card.message}"successfully deleted'}), 200
+
+
+@cards_bp.route("/<model_id>/like", methods=["PUT"])
+def likes(model_id):
+    card = validate(Card, model_id)
+
+    card.likes_count = card.likes_count + 1
+
+    db.session.commit()
+
+    response_body = dict(card=card.to_dict())
+
+    return jsonify(response_body), 200
+
+
+@cards_bp.route("/<model_id>/unlike", methods=["PUT"])
+def unlikes(model_id):
+    card = validate(Card, model_id)
+
+    card.likes_count = card.likes_count - 1
+
+    validate_card(card)
+
+    db.session.commit()
+
+    response_body = dict(card=card.to_dict())
+
+    return jsonify(response_body), 200
+
+
+@cards_bp.route("/<model_id>", methods=["PATCH"])
+def update_cards(model_id):
+    card = validate(Card, model_id)
+    message = request.get_json()["message"]
+    card.message = message
+
+    validate_card(card)
+
+    db.session.commit()
+
+    response_body = dict(card=card.to_dict())
+
+    return jsonify(response_body), 200

@@ -24,6 +24,10 @@ def validate_card(card: Card):
     if msg_len < 1 or msg_len > 100:
         abort(make_response(jsonify({"message": "details: invalid data"}), 400))
 
+    if card.likes_count and card.likes_count < 0:
+        abort(make_response(jsonify({"message": "details: invalid likes_count"}), 400))
+
+
 def validate_board(board: Board):
     title_len = len(board.title)
     owner_len = len(board.owner)

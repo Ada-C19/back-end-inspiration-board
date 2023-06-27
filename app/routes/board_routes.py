@@ -57,14 +57,14 @@ def add_card_by_goal_id(model_id):
     return jsonify(response_body), 200
 
 
-# @boards_bp.route("/<model_id>/cards", methods=["GET"])
-# def get_board_cards(model_id):
-#     board = validate(Board, model_id)
+@boards_bp.route("/<model_id>/cards", methods=["GET"])
+def get_board_cards(model_id):
+    board = validate(Board, model_id)
 
-#     cards = Card.query.filter(Card.model_id == board.board_id)
-#     cards_response = [card.to_dict() for card in cards]
+    cards = Card.query.filter(Card.board_id == board.board_id)
+    cards_response = [card.to_dict() for card in cards]
 
-#     return jsonify(cards_response), 200
+    return jsonify(cards_response), 200
 
 
 @boards_bp.route("/<board_id>", methods=["DELETE"])
