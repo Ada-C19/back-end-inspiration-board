@@ -104,11 +104,17 @@ def test_get_400_error_with_invalid_id(client, one_board):
 
 # CARD TESTS
 # @pytest.mark.skip
-def test_get_cards_no_saved_card(client, one_board):
+def test_get_card(client, one_card):
     # Act
-    response = client.get("/boards/1/cards")
+    response = client.get("/cards")
     response_body = response.get_json()
 
     # Assert
     assert response.status_code == 200
-    assert response_body == []
+    assert len(response_body) == 1
+    assert response_body == [
+        {
+            "message": "Taylor Swift - Dear John!!! Get out my face, you stupid, man",
+            "likes_count": 0
+        }
+    ]
