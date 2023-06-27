@@ -3,7 +3,8 @@ from app.models.card import Card
 import pytest
 
 
-# BOARD TESTS
+###### BOARD TESTS ######
+
 # @pytest.mark.skip(reason="No way to test this feature yet")
 def test_create_board(client):
     # Act
@@ -102,7 +103,76 @@ def test_get_400_error_with_invalid_id(client, one_board):
     }
 
 
-# CARD TESTS
+@pytest.mark.skip
+def test_update_board(client, one_board):
+    # Act
+    response = client.put("/boards/1", json={
+        "title": "Updated Board Title",
+        "owner": "Updated Board Owner",
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert "board" in response_body
+    assert response_body == {
+        "board": {
+            "id": 1,
+            "title": "Updated Board Title",
+            "owner": "Updated Board Owner",
+        }
+    }
+    board = Board.query.get(1)
+    assert board.title == "Updated Board Title"
+    assert board.owner == "Updated Board Owner"
+
+
+@pytest.mark.skip
+def test_get_404_error_to_update_board_not_found(client, one_board):
+    # Act
+    response = client.put("/boards/2", json={
+        "title": "Updated Board Title",
+        "owner": "Updated Board Owner",
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 404
+    assert response_body == {
+        "message": "Board 2 does not exist"
+    }
+
+
+@pytest.mark.skip
+def test_delete_board(client, one_board):
+    # Act
+    response = client.delete("/boards/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert "board" in response_body
+    assert response_body == {
+        "details": 'Board 1 successfully deleted'
+    }
+    assert Task.query.get(1) == None
+
+
+@pytest.mark.skip
+def test_get_404_error_to_delete_board_not_found(client, one_board):
+    # Act
+    response = client.delete("/boards/2")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 404
+    assert response_body == {
+        "message": "Board 2 does not exist"
+    }
+
+
+###### CARD TESTS ######
+
 # @pytest.mark.skip
 def test_get_card(client, one_card):
     # Act
@@ -118,3 +188,19 @@ def test_get_card(client, one_card):
             "likes_count": 0
         }
     ]
+
+
+def test_get_card_by_id(client, one_card):
+    # Act
+    response = client.get("/cards/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == {
+        "card": {
+            "message": "Taylor Swift - Dear John!!! Get out of my face, you stupid, man",
+            "likes_count": 0
+        }
+    }
