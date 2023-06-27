@@ -32,6 +32,7 @@ def test_get_board_one_saved_board(client, one_board):
     ]
 
 
+# @pytest.mark.skip
 def test_get_board_by_id(client, one_board):
     # Act
     response = client.get("/boards/1")
@@ -49,6 +50,7 @@ def test_get_board_by_id(client, one_board):
     ]
 
 
+# @pytest.mark.skip
 def test_get_404_error_with_id_not_found(client, one_board):
     # Act
     response = client.get("/boards/3")
@@ -61,6 +63,7 @@ def test_get_404_error_with_id_not_found(client, one_board):
     }
 
 
+# @pytest.mark.skip
 def test_get_400_error_with_invalid_id(client, one_board):
     # Act
     response = client.get("/boards/h")
