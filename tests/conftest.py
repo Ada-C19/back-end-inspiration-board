@@ -2,6 +2,7 @@ import pytest
 from app import create_app
 from app import db
 from app.models.board import Board
+from app.models.card import Card
 from flask.signals import request_finished
 
 
@@ -31,7 +32,18 @@ def client(app):
 @pytest.fixture
 def one_board(app):
     new_board = Board(
-        title="Movie Lovers", owner="Amethyst")
+        title="Movie Lovers",
+        owner="Amethyst"
+    )
+
     db.session.add(new_board)
     db.session.commit()
 
+
+@pytest.fixture
+def one_card_on_board(app, one_board):
+    new_card = Card(
+        message="Taylor Swift - Dear John!!! Get out my face, you stupid, man",
+        likes_count=0,
+        board_id=one_board.id
+    )

@@ -15,18 +15,17 @@ def test_create_board(client):
     # Assert
     assert response.status_code == 201
     assert "board" in response_body
-    assert response_body == {
+    assert response_body == [{
         "board": {
             "id": 1,
             "board": "Test Board",
             "owner": "Test User",
         }
-    }
+    }]
     new_board = Board.query.get(1)
     assert new_board
     assert new_board.title == "Test Board"
     assert new_board.owner == "Test User"
-
 
 
 # @pytest.mark.skip
@@ -49,13 +48,13 @@ def test_get_board_one_saved_board(client, one_board):
     # Assert
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == [
-        {
+    assert response_body == [{
+        "board": {
             "id": 1,
             "title": "Movie Lovers",
             "owner": "Amethyst"
         }
-    ]
+    }]
 
 
 # @pytest.mark.skip
@@ -67,13 +66,13 @@ def test_get_board_by_id(client, one_board):
     # Assert
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == [
-        {
+    assert response_body == [{
+        "board": {
             "id": 1,
             "title": "Movie Lovers",
             "owner": "Amethyst"
         }
-    ]
+    }]
 
 
 # @pytest.mark.skip
@@ -102,4 +101,4 @@ def test_get_400_error_with_invalid_id(client, one_board):
     }
 
 
-
+# CARD TESTS
