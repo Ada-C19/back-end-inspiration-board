@@ -18,7 +18,7 @@ def create_board():
     db.session.add(new_board)
     db.session.commit()
 
-    response_body = {"boards": new_board.to_dict()}
+    response_body = {"board": new_board.to_dict()}
 
     return jsonify(response_body), 201
 
@@ -74,7 +74,7 @@ def delete_boards(board_id):
     db.session.delete(board)
     db.session.commit()
 
-    return jsonify({"details": f'Board {board_id} "{board.title}"successfully deleted'}), 200
+    return jsonify({"details": f'Board {board_id} "{board.title}" successfully deleted'}), 200
 
 
 @boards_bp.route("/<model_id>", methods=["PATCH"])
@@ -92,3 +92,4 @@ def update_boards(model_id):
     response_body = dict(board=board.to_dict())
 
     return jsonify(response_body), 200
+

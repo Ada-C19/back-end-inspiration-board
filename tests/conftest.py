@@ -31,12 +31,9 @@ def client(app):
 
 @pytest.fixture
 def one_card(app):
-        card = Card(
-            message="Here we are... Struggling, Yay!",
-            likes_count=0,
-            board_id=1
-        )
-        db.session.add(card)
+
+        db.session.add(Card(
+            message="First Message"))
         db.session.commit()
 
 
@@ -44,19 +41,14 @@ def one_card(app):
 def three_cards(app):
     db.session.add_all([
         Card(
-            message="First message",
-            likes_count=0,
-            board_id=1
+            message="First Message",
         ),
         Card(
-            message="Second message",
-            likes_count=0,
-            board_id=1
+            message="Second Message",
+
         ),
         Card(
-            message="Third message",
-            likes_count=0,
-            board_id=1
+            message="Third Message",
         )
         ])
 

@@ -94,3 +94,64 @@ def test_get_all_boards(client, three_boards):
 #         "owner": "First Owner",
 #         "cards": []
 #     }
+
+def test_delete_board(client, one_board):
+    # Act
+    response = client.delete("/boards/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert "details" in response_body
+    assert response_body == {
+        "details": f'Board 1 "First Title" successfully deleted'}
+
+
+    response = client.get("/boards/1")
+    assert response.status_code == 404
+    assert Board.query.get(1) == None
+
+def test_create_board(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "First Title",
+        "owner": "First Owner"
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 201
+    assert "board" in response_body
+    assert response_body == {
+        "board": {
+            "id": 1,
+            "title": "First Title",
+            "owner": "First Owner"
+        }
+    }
+
+
+def test_post_card_to_goal_by_goal_id(client, one_board, one_card):
+    # Act
+    response = client.post("/boards/1/card", json=
+        {
+            "message": "First Message",
+        })
+
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert "id" in response_body["card"]
+    assert "card" in response_body
+    assert response_body == {
+        "card": {
+            "id": 2,
+            "message": "First Message",
+            "likes_count": 0
+        }
+
+    }
+
+    # Check that Goal was updated in the db
+    # assert len(Board.query.get(1).card) == 1
