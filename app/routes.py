@@ -73,15 +73,17 @@ def delete_card_by_id(card_id):
     return abort(make_response({"details":f"Card {card.card_id} successfully deleted"}))
 
 # copy pasta from task-list to delete (overwrite) the dolphins
-@goals_bp.route("<goal_id>", methods=["PUT"])
-def update_goal_title(goal_id):
-    goal = validate_model(Goal, goal_id)
-    request_body = request.get_json()
-    goal.title = request_body["title"]
+@goals_bp.route("<board_id>", methods=["PATCH"])
+def update_card_title(board_id):
+    board = validate_model(Board, board_id)
+    # request_body = request.get_json()
+    board.cards = []
     return {
-    "goal": {
-        "id": goal.goal_id,
-        "title": goal.title
+    "board": {
+        "id": board.board_id,
+        "title": board.title,
+        "owner": board.owner,
+        "cards": []
     }}
     db.session.commit()
 
