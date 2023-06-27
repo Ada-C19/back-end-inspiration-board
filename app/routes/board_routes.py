@@ -58,7 +58,7 @@ def add_card_by_goal_id(model_id):
 
 
 @boards_bp.route("/<model_id>/cards", methods=["GET"])
-def get_board_cards(model_id):
+def get_cards_by_board_id(model_id):
     board = validate(Board, model_id)
 
     cards = Card.query.filter(Card.board_id == board.board_id)
