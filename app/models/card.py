@@ -19,7 +19,7 @@ class Card(db.Model):
     @classmethod
     def from_dict(cls, data_dict):
         return cls(
-            message = data_dict["message"]
+            message = data_dict["message"],
             #should we add likes count?
             likes_count = data_dict["likes_count"]
         )
