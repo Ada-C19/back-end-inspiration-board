@@ -10,12 +10,12 @@ bp = Blueprint('boards', __name__, url_prefix="/boards")
 def create_board():
     request_body = request.get_json()
 
-    new_goal = Board.from_dict(request_body)
+    new_board = Board.from_dict(request_body)
 
-    db.session.add(new_goal)
+    db.session.add(new_board)
     db.session.commit()
 
-    return jsonify({"goal": new_goal.to_dict()}), 201
+    return jsonify({"goal": new_board.to_dict()}), 201
 
 def validate_model(cls, model_id):
     try: 
