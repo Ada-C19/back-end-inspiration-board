@@ -10,11 +10,19 @@ class Card(db.Model):
 
     def to_dict(self):
         card_dict = {
-
+            "id": self.id,
+            "message": self.message,
+            "likes_count": self.likes_count,
+            "date_created": self.date_created,
+            "board_id": self.board_id,
         }
         return card_dict
     
     @classmethod
     def from_dict(cls, data):
         return Card(
+            message=data["message"],
+            likes_count=data["likes_count"],
+            date_created=data["date_created"],
+            board_id=data["board_id"],
         )
