@@ -14,8 +14,7 @@ class Board(db.Model):
 
         return board_as_dict
 
-    @classmethod
     def board_from_dict(cls, board_data):
-        new_board = cls(title=board_data["title"], owner=board_data["owner"])
+        new_board = Board(title=board_data["title"], owner=board_data["owner"])
 
         return new_board
