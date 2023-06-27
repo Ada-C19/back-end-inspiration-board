@@ -13,7 +13,7 @@ class Board(db.Model):
         board_as_dict["owner"] = self.owner
 
         return board_as_dict
-    
+
     @classmethod
     def board_from_dict(cls, board_data):
         new_board = cls(title=board_data["title"], owner=board_data["owner"])
