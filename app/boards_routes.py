@@ -24,14 +24,13 @@ def create_board():
 
 @boards_bp.route("/<board_id>", methods=["GET"])
 def read_one_board(board_id):
-    # board = validate_model(Board, board_id)
-    board = Board.query.get(board_id)
+    board = validate_model(Board, board_id)
 
-    return make_response({
-        "id": board.id,
-        "title": board.title,
-        "owner": board.owner
-    }, 200)
+    response_body = {
+        "board": board.board_to_dict()
+    }
+
+    return jsonify(response_body)
 
 @boards_bp.route("/<board_id>/cards", methods=["POST"])
 def create_one_card_for_board(board_id):

@@ -18,7 +18,6 @@ class Card(db.Model):
 
     @classmethod
     def card_from_dict(cls, card_data):
-        new_card = cls(message=card_data["message"],
-                       likes_count=card_data.get("likes_count", 0))
+        new_card = cls(message=card_data["message"], likes_count=card_data.get("likes_count", 0))
 
         return new_card
