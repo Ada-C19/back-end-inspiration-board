@@ -90,20 +90,6 @@ def read_card_by_id(card_id):
     # returns card # in dict form
     return (f"{card_id}: ${make_card_dict(card)}")
 
-# CREATE - Create new card
-
-
-@card_bp.route("", methods=["POST"])
-def create_new_card():
-    request_body = request.get_json()
-    new_card = Card.from_dict(request_body)
-    
-    db.session.add(new_card)
-    db.session.commit()
-
-    return jsonify(f"Card {new_card.name} successfully created for your message!"), 201
-
-# CREATE - Create card for board
 
 
 @board_bp.route("/<board_id>/cards", methods=["POST"])
@@ -114,7 +100,7 @@ def create_card_by_id(board_id):
     request_body = request.get_json()
 
     new_card = Card(
-        likes_count=request_body["likes_count"],
+        # likes_count=request_body["likes_count"],
         message=request_body["message"],
         board=board
     )
@@ -122,8 +108,7 @@ def create_card_by_id(board_id):
     db.session.add(new_card)
     db.session.commit()
 
-    return jsonify(f"Card {new_card.name} owned by {new_card.board.name} was successfully created."), 201
-
+    return new_card.to_dict(), 201
 
 # DELETE - Delete ONE card
 @card_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
@@ -134,6 +119,8 @@ def delete_card_by_id(card_id):
     return abort(make_response({"details": f"Card {card.card_id} successfully deleted"}))
 
 # copy pasta from task-list to delete (overwrite) the dolphins
+
+
 @card_bp.route("/<board_id>", methods=["PATCH"])
 def update_card_title(board_id):
     board = validate_model(Board, board_id)
