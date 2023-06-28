@@ -5,6 +5,7 @@ from .route_helpers import validate_model
 
 card_bp = Blueprint('card_bp', __name__, url_prefix="/cards")
 
+# CREATE
 @card_bp.route("", methods=["POST"])
 def make_new_card():
     request_body = request.get_json()
@@ -16,6 +17,8 @@ def make_new_card():
     
     return make_response(f"Card successfully created", 201)
 
+
+# READ
 @card_bp.route("", methods=["GET"])
 def get_all_cards():
 
@@ -26,6 +29,15 @@ def get_all_cards():
     return jsonify(cards_list), 200
 
 
+# UPATE
+@card_bp.route("/<card_id>/like", methods=["PATCH"])
+def like_card(card_id):
+    card = validate_model(Card, card_id)
+    card.likes_count += 1
+    db.session.commit() 
+    return make_response(f"card {card.id} liked")
+
+# DELETE
 @card_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
     card = validate_model(Card, card_id)
@@ -36,6 +48,5 @@ def delete_card(card_id):
     return make_response(f"Card successfully deleted")
 
 
-# need update like count for card 
 
 
