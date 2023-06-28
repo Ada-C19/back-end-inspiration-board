@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
-from .route_helpers import create_model, validate_model, update_model
+from .route_helpers import create_model, validate_model
 from app.models.board import Board
 from app.models.card import Card
 
@@ -48,20 +48,8 @@ def get_specific_board(board_id):
 @board_bp.route("<board_id>/cards", methods=["GET"])
 def get_cards_from_board(board_id):
     board = validate_model(Board, board_id)
-    card_list = [card.to_dict() for card in board.cards]
-
-    # do we want the board though or just the cards?
-    # i could just return card.to_dict for each card in card_list 
-    return make_response(board.to_dict(), 200)
-
-# UPDATE
-@board_bp.route("<board_id>", methods=["PUT"])
-def update_board(board_id):
-    board = validate_model(Board, board_id)
-    request_body = request.get_json()
-    update_model(board, request_body)
-    db.session.commit()
-    return make_response({"board": board.to_dict()}, 200)
+    card_list = [card.make_card_dict() for card in board.cards]
+    return jsonify(card_list), 200
 
 
 # DELETE
