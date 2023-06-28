@@ -85,7 +85,7 @@ def read_all_cards():
 
 @card_bp.route("/<card_id>", methods=["GET"])
 def read_card_by_id(card_id):
-    card = validate_model(Card, card_id)
+    card = validate_model(Card, Card, card_id)
 
     # returns card # in dict form
     return (f"{card_id}: ${make_card_dict(card)}")
@@ -97,7 +97,7 @@ def read_card_by_id(card_id):
 def create_new_card():
     request_body = request.get_json()
     new_card = Card.from_dict(request_body)
-
+    
     db.session.add(new_card)
     db.session.commit()
 
