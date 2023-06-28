@@ -24,22 +24,21 @@ def validate_model(cls, model_id):
 ### Post a new card under a board ###
 @board_bp.route("/<board_id>/cards", methods = ["POST"])
 def create_card_by_board_id(board_id):
-
     board = validate_model(Board, board_id)
 
     request_body = request.get_json()
 
     new_card = Card(
         message=request_body["message"],
-        liked_count=request_body["liked_count"],
+        liked_count=0,
         board=board
     )
 
     db.session.add(new_card)
     db.session.commit()
 
-    return jsonify(f"Card {new_card.card_id} under {new_card.board.title} was successfully created."), 201
-
+    return jsonify(new_card.to_dict()), 201
+    # we want response to be new_card object with id, message, board, like count
 
 ### Get all cards from a board ###
 @board_bp.route("/<board_id>/cards", methods=["GET"])

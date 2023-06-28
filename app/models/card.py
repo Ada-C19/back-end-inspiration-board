@@ -22,5 +22,6 @@ class Card(db.Model):
         return {
             "card_id": self.card_id,
             "message": self.message,
-            "liked_count": self.liked_count
+            "liked_count": self.liked_count,
+            "board_id": self.board_fk
         }
