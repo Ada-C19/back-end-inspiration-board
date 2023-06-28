@@ -3,7 +3,6 @@ from app import db
 class Card(db.Model):
     card_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     message = db.Column(db.String, nullable=False)
-    # remember to make sure default works
     likes_count = db.Column(db.Integer, default=0, nullable=False)
     board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'), nullable=False)
     board = db.relationship("Board", back_populates="cards", lazy=True)
@@ -18,7 +17,6 @@ class Card(db.Model):
     
     @classmethod
     def from_dict(cls, data_dict):
-        # the only thing we need to customize on the board is the message
         return cls(
             message = data_dict["message"]
         )

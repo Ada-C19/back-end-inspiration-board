@@ -15,9 +15,6 @@ def create_board():
         new_board = Board.from_dict(request_body)
         db.session.add(new_board)
         db.session.commit()
-        # ask instructor why return doesn't work without to_dict
-        # python doesn't know wat we want to do with the Object, so it can be serialized
-        # objects in Python are not dicts/collection of key-value pairs
         return make_response({"board": new_board.to_dict()}, 201)
     except KeyError:
         abort(make_response({"Invalid data"}, 400))
