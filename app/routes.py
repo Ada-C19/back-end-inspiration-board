@@ -25,9 +25,10 @@ def post_to_slack(card):
     header = {"Authorization": os.environ.get("SLACK_API_KEY")}
     data = {
         'channel': 'new-card-updates',
-        'text': f'Card with message: {card.message} for board {card.board.title} was created!'
+        'text': f"Card with message \"{card.message}\" for board \"{card.board.title}\" was created!"
     }
     response = requests.post(path, headers=header, data=data)
+    return response
 
 #example_bp = Blueprint('example_bp', __name__)
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")

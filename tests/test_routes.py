@@ -1,7 +1,9 @@
 from app.models.board import Board
-from app.routes import validate_model
+from app.models.card import Card
+from app.routes import validate_model, post_to_slack
 from werkzeug.exceptions import HTTPException
 import pytest
+
 
 def test_create_board_no_owner(client):
     response = client.post('/boards', json = {
@@ -117,7 +119,6 @@ def test_card_like_increases_by_1(client, one_saved_boards_with_two_cards):
     assert response.status_code == 200
 
 
-
 def test_validate_model_returns_model(two_saved_boards):
     model_id = 1
     model = Board
@@ -133,3 +134,15 @@ def test_validate_model_returns_invalid_id(two_saved_boards):
 def test_validate_model_returns_not_found(two_saved_boards):
     with pytest.raises(HTTPException):
         result = validate_model(Board, 3)
+
+def test_post_to_slack_success(client, one_saved_boards_with_two_cards):
+    # Set Up
+    card_1 = Card(message = "card 1 message")
+    board_1 = Board(owner = "Lindsay", title = "Shroomies", cards = [card_1])
+
+    # Act
+    response = post_to_slack(card_1)
+    
+    # Assert
+    assert response.json()['message']['text'] == 'Card with message \"card 1 message\" for board \"Shroomies\" was created!'
+    assert response.status_code == 200
