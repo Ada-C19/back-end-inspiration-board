@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify, abort, make_response
 from app import db
 from app.models.board import Board
 from app.models.card import Card
+import requests 
+import os
 
 
 # Helper Functions:
@@ -17,6 +19,15 @@ def validate_model(model_class, model_id):
         abort(make_response({'message': f'{model_id} does not exist'}, 404))
 
     return model
+
+def post_to_slack(card):
+    path = 'https://slack.com/api/chat.postMessage'
+    header = {"Authorization": os.environ.get("SLACK_API_KEY")}
+    data = {
+        'channel': 'new-card-updates',
+        'text': f'Card with message: {card.message} for board {card.board.title} was created!'
+    }
+    response = requests.post(path, headers=header, data=data)
 
 #example_bp = Blueprint('example_bp', __name__)
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
@@ -63,6 +74,8 @@ def create_card_for_board(board_id):
     db.session.add(new_card)
     db.session.commit()
 
+    post_to_slack(new_card)
+
     return jsonify('Card was successfully created'), 201
 
 # get cards for board_id
@@ -94,6 +107,8 @@ def increment_like_on_card(card_id):
     db.session.commit()
 
     return card.to_dict(), 200
+
+# 
 
 # Possible other routes:
 # get board by id
