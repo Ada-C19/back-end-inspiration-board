@@ -18,7 +18,7 @@ class Card(db.Model):
             "board_id": self.board_id,
         }
         return card_dict
-    
+
     @classmethod
     def from_dict(cls, data):
         return Card(
@@ -27,7 +27,7 @@ class Card(db.Model):
             date_created=datetime.now(),
             board_id=data["board_id"],
         )
-    
+
     @classmethod
     def get_required_fields(self):
         return ["message", "likes_count", "board_id"]

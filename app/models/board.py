@@ -8,7 +8,11 @@ class Board(db.Model):
     description = db.Column(db.String)
     theme = db.Column(db.String, nullable=True)
     date_created = db.Column(db.DateTime)
-    cards = db.relationship("Card", back_populates="board")
+    cards = db.relationship(
+        "Card",
+        cascade="all, delete",
+        back_populates="board"
+    )
 
     def to_dict(self):
         board_dict = {
@@ -32,7 +36,7 @@ class Board(db.Model):
             theme=data.get("theme", None),
             date_created=datetime.now(),
         )
-    
+
     @classmethod
     def get_required_fields(self):
         return ["owner", "title", "description"]

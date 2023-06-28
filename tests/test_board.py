@@ -1,4 +1,5 @@
 from app.models.board import Board
+from app.models.card import Card
 from datetime import datetime
 import freezegun
 import pytest
@@ -134,7 +135,7 @@ def test_create_board(client):
 
 def test_update_board(client, one_board):
     response = client.patch("/boards/1", json={
-        "title": "New Title", 
+        "title": "New Title",
         "description": "New Description",
         "theme": "New Theme"
     })
@@ -165,7 +166,7 @@ def test_update_board(client, one_board):
 
 def test_update_board_not_found(client):
     response = client.patch("/boards/1", json={
-        "title": "New Title", 
+        "title": "New Title",
         "description": "New Description",
         "theme": "New Theme"
     })
@@ -178,7 +179,7 @@ def test_update_board_not_found(client):
 
 def test_update_board_invalid_id(client):
     response = client.patch("/boards/one", json={
-        "title": "New Title", 
+        "title": "New Title",
         "description": "New Description",
         "theme": "New Theme"
     })
@@ -189,7 +190,7 @@ def test_update_board_invalid_id(client):
         "error": "'one' is not a valid id"
     }
 
-def test_delete_board(client, one_board):
+def test_delete_board(client, one_board, three_cards):
     response = client.delete("/boards/1")
     response_body = response.get_json()
 
@@ -200,6 +201,7 @@ def test_delete_board(client, one_board):
     }
 
     assert Board.query.get(1) is None
+    assert len(Card.query.all()) == 0
 
 def test_delete_board_not_found(client):
     response = client.delete("/boards/1")
@@ -230,7 +232,7 @@ def test_create_board_must_contain_title(client):
 
     assert response.status_code == 400
     assert response_body == {
-        "error": "missing required values", 
+        "error": "missing required values",
         "details": ["title"]
     }
 
@@ -245,7 +247,7 @@ def test_create_board_must_contain_owner(client):
 
     assert response.status_code == 400
     assert response_body == {
-        "error": "missing required values", 
+        "error": "missing required values",
         "details": ["owner"]
     }
 
@@ -260,7 +262,7 @@ def test_create_board_must_contain_description(client):
 
     assert response.status_code == 400
     assert response_body == {
-        "error": "missing required values", 
+        "error": "missing required values",
         "details": ["description"]
     }
 
