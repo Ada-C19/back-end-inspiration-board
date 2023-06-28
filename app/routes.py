@@ -84,7 +84,7 @@ def create_card_by_id(board_id):
     request_body = request.get_json()
 
     new_card = Card(
-        color=request_body["color"],
+        likes_count=request_body["likes_count"],
         message=request_body["message"],
         board=board
     )
