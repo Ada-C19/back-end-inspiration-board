@@ -8,11 +8,12 @@ from app.routes.helper_functions import validate_model
 card_bp = Blueprint("cards", __name__, url_prefix="/boards")
 
 @card_bp.route("/<board_id>", methods=["POST"])
-def create_one_card(board_id):
+def create_card_for_board(board_id):
     validate_model(Board, board_id)
     request_body = request.get_json()
     try:
         new_card = Card.from_dict(request_body)
+        new_card.board_id = board_id
         db.session.add(new_card)
         db.session.commit()
         return make_response({"card": new_card.to_dict()}, 201)
@@ -23,11 +24,8 @@ def create_one_card(board_id):
 
 @card_bp.route("<card_id>", methods=["PATCH"])
 def update_one_card_likes():
-
+    pass
 
 @card_bp.route("<card_id>", methods=["DELETE"])
 def delete_one_card():
-
-
-
-
+    pass
