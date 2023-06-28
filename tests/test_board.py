@@ -23,7 +23,8 @@ def test_get_boards_one_saved_board(client, one_board):
             "owner": "Test Owner",
             "description": "Test Description",
             "theme": "Test Theme",
-            "date_created": "Thu, 01 Jun 2023 12:00:00 GMT"
+            "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
+            "cards": []
         }
     ]
 
@@ -40,7 +41,8 @@ def test_get_boards_three_saved_boards(client, three_boards):
             "owner": "Test Owner 1",
             "description": "Test Description 1",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
-            "theme": "Test Theme 1"
+            "theme": "Test Theme 1",
+            "cards": []
         },
         {
             "id": 2,
@@ -48,7 +50,8 @@ def test_get_boards_three_saved_boards(client, three_boards):
             "owner": "Test Owner 2",
             "description": "Test Description 2",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
-            "theme": "Test Theme 2"
+            "theme": "Test Theme 2",
+            "cards": []
         },
         {
             "id": 3,
@@ -56,7 +59,8 @@ def test_get_boards_three_saved_boards(client, three_boards):
             "owner": "Test Owner 3",
             "description": "Test Description 3",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
-            "theme": "Test Theme 3"
+            "theme": "Test Theme 3",
+            "cards": []
         }
     ]
 
@@ -72,7 +76,8 @@ def test_get_board_by_id(client, one_board):
             "owner": "Test Owner",
             "description": "Test Description",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
-            "theme": "Test Theme"
+            "theme": "Test Theme",
+            "cards": []
         }
     }
 
@@ -114,7 +119,8 @@ def test_create_board(client):
                 "owner": "Test Owner",
                 "description": "Test Description",
                 "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
-                "theme": "Test Theme"
+                "theme": "Test Theme",
+                "cards": []
             }
         }
 
@@ -143,7 +149,8 @@ def test_update_board(client, one_board):
             "owner": "Test Owner",
             "description": "New Description",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
-            "theme": "New Theme"
+            "theme": "New Theme",
+            "cards": []
         }
     }
 
@@ -154,6 +161,7 @@ def test_update_board(client, one_board):
     assert updated_board.description == "New Description"
     assert updated_board.date_created == datetime(2023, 6, 1, 12, 0, 0)
     assert updated_board.theme == "New Theme"
+    assert updated_board.cards == []
 
 def test_update_board_not_found(client):
     response = client.patch("/boards/1", json={
@@ -274,6 +282,7 @@ def test_create_board_does_not_need_theme_or_time(client):
                 "owner": "Test Owner",
                 "description": "Test Description",
                 "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
+                "cards": [],
                 "theme": None
             }
         }

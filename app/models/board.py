@@ -10,7 +10,7 @@ class Board(db.Model):
     date_created = db.Column(db.DateTime)
     cards = db.relationship("Card", back_populates="board")
 
-    def to_dict(self, cards=False):
+    def to_dict(self):
         board_dict = {
             "id": self.id,
             "owner": self.owner,
@@ -18,11 +18,9 @@ class Board(db.Model):
             "description": self.description,
             "theme": self.theme,
             "date_created": self.date_created,
+            "cards": [card.to_dict() for card in self.cards]
         }
 
-        if cards:
-            board_dict["cards"] = [card.to_dict() for card in self.cards]
-        
         return board_dict
 
     @classmethod
