@@ -5,17 +5,18 @@ from .route_helper import validate_model
 
 bp = Blueprint('cards', __name__, url_prefix="/cards")
 
-# create a card endpoint
-# @bp.route("", methods=["POST"])
+# update card endpoint
+@bp.route("/<card_id>", methods=["PATCH"])
+def add_like(card_id):
+    card = validate_model(Card, card_id)
 
-# get all cards endpoint
-# @bp.route("", methods=["GET"])
+    card.likes_count += 1
 
-# get one card by ID endpoint
-# @bp.route("/<card_id>", methods=["GET"])
+    db.session.commit()
+
+    response_body = dict(card=card.to_dict())
+
+    return make_response(jsonify(response_body), 200)
 
 # delete a card endpoint
 # @bp.route("/<card_id>", methods=["DELETE"])
-
-# update card endpoint
-# @bp.route("/<card_id>", methods=["PUT"])

@@ -22,8 +22,8 @@ class Card(db.Model):
     @classmethod
     def from_dict(cls, data_dict):
         try:
-            new_instance = cls(title=data_dict["title"])
+            new_instance = cls(message=data_dict["message"], likes_count=0)
         except KeyError:
-            abort(make_response({"details": "Invalid data"}, 400))
+            abort(make_response({"details": "Message cannot be empty"}, 400))
 
         return new_instance

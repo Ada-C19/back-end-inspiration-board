@@ -1,4 +1,6 @@
 from flask import abort, make_response,request
+from app.models.card import Card
+from app import db
 
 def validate_model(cls, model_id):
     try: 
@@ -12,3 +14,10 @@ def validate_model(cls, model_id):
         abort(make_response({"message":f"{cls.__name__} {model_id} not found"}, 404))
 
     return model
+
+def create_card(request_body):
+    new_card = Card.from_dict(request_body)
+
+    db.session.add(new_card)
+    db.session.commit()
+    return new_card.id
