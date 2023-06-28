@@ -49,3 +49,14 @@ def create_card(board_id):
 
     return make_response({"id": board.board_id, "card_id": card.card_id}), 200
 
+@boards_bp.route('/<board_id>/cards', methods='GET')
+def get_all_cards(board_id):
+    board = validate_model(Board, board_id)
+    
+    cards = Card.query.filter_by(board=board)
+    
+    cards_response = [card.to_dict() for card in cards]
+
+    return jsonify(cards_response)
+
+
