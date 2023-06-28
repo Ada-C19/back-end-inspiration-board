@@ -61,7 +61,7 @@ def test_create_card_for_board_1(client, two_saved_boards):
     board_response = client.get('/boards/1/cards')
     board_response_body = board_response.get_json()
 
-    assert board_response_body == [{'board': 'Shroomies', 'id': 1, "message": "card 1 message"}]
+    assert board_response_body == [{'board': 'Shroomies', 'id': 1, "message": "card 1 message", "likes": 0}]
     assert response_body == "Card was successfully created"
     assert response.status_code == 201
 
@@ -89,8 +89,8 @@ def test_get_all_cards_from_board_one_with_two_cards(client, one_saved_boards_wi
     response = client.get('/boards/1/cards')
     response_body = response.get_json()
 
-    assert response_body == [{'board': 'Shroomies', 'id': 1, 'message': 'card 1 message'},
-        {'board': 'Shroomies', 'id': 2, 'message': 'card 2 message'}]
+    assert response_body == [{'board': 'Shroomies', 'id': 1, 'message': 'card 1 message', 'likes': 0},
+        {'board': 'Shroomies', 'id': 2, 'message': 'card 2 message', 'likes': 0}]
     assert response.status_code == 200
 
 def test_delete_card(client, one_saved_boards_with_two_cards):
@@ -100,7 +100,7 @@ def test_delete_card(client, one_saved_boards_with_two_cards):
     card_response = client.get('/boards/1/cards')
     card_response_body = card_response.get_json()
 
-    assert card_response_body == [{'board': 'Shroomies', 'id': 2, 'message': 'card 2 message'}]
+    assert card_response_body == [{'board': 'Shroomies', 'id': 2, 'message': 'card 2 message', 'likes': 0}]
     assert response_body == "Card successfully deleted"
     assert response.status_code == 201
 

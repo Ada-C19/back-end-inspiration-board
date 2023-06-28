@@ -85,6 +85,20 @@ def delete_card(card_id):
 
     return jsonify('Card successfully deleted'), 201
 
+# Updating like by +1 on card
+@cards_bp.route('/<card_id>', methods=['PATCH'])
+def increment_like_on_card(card_id):
+     card = validate_model(Card, card_id)
+
+     if not card.likes:
+        card.likes = 0
+
+     card.likes = card.likes + 1
+
+     db.session.commit()
+
+     return card.to_dict(), 200
+
 # Possible other routes:
 # get board by id
 # delete board and associated cards --- use cascading
