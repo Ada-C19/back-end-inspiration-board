@@ -111,7 +111,7 @@ def create_card_by_id(board_id):
     return new_card.to_dict(), 201
 
 # DELETE - Delete ONE card
-@card_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
+@card_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card_by_id(card_id):
     card = validate_model(Card, card_id)
     db.session.delete(card)
@@ -121,19 +121,21 @@ def delete_card_by_id(card_id):
 # copy pasta from task-list to delete (overwrite) the dolphins
 
 
-@card_bp.route("/<board_id>", methods=["PATCH"])
+
+@board_bp.route("/<board_id>/cards", methods=["PATCH"])
 def update_card_title(board_id):
     board = validate_model(Board, board_id)
     # request_body = request.get_json()
     board.cards = []
+
     db.session.commit()
     return {
-    "board": {
-        "id": board.board_id,
-        "title": board.title,
-        "owner": board.owner,
-        "cards": []
-    }}
+        "board": {
+            "id": board.board_id,
+            "title": board.title,
+            "owner": board.owner,
+            "cards": []
+        }}
     db.session.commit()
 
 
