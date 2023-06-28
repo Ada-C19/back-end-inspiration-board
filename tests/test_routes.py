@@ -3,7 +3,7 @@
 from app.models.board import Board
 import pytest
 
-@pytest.mark.skip(reason="Feature not yet built")
+# @pytest.mark.skip(reason="Feature not yet built")
 def test_get_board_no_board_saved(client):
     response = client.get("/boards")
     response_body = response.get_json()
