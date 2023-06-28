@@ -89,7 +89,7 @@ def read_card_by_id(card_id):
     
 # CREATE - Create new card
 
-@cards_bp.route("", methods=["POST"])
+@card_bp.route("", methods=["POST"])
 def create_new_card():
     request_body = request.get_json()
     new_card = Card.from_dict(request_body)
@@ -101,7 +101,7 @@ def create_new_card():
 
 #CREATE - Create card for board 
 
-@hboard_bp.route("/<board_id>/card", methods=["POST"])
+@board_bp.route("/<board_id>/card", methods=["POST"])
 def create_card_by_id(board_id):
 
     board = validate_model(Board, board_id)
