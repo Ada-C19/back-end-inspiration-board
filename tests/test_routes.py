@@ -104,6 +104,20 @@ def test_delete_card(client, one_saved_boards_with_two_cards):
     assert response_body == "Card successfully deleted"
     assert response.status_code == 201
 
+def test_card_like_increases_by_1(client, one_saved_boards_with_two_cards):
+    response = client.patch('/cards/1')
+    response_body = response.get_json()
+
+    card_response = client.get('/boards/1/cards')
+    card_response_body = card_response.get_json()
+    print(card_response_body)
+    assert card_response_body == [{'board': 'Shroomies', 'id': 2, 'message': 'card 2 message', 'likes': 0},
+        {'board': 'Shroomies', 'id': 1, 'message': 'card 1 message', 'likes': 1}]
+    assert response_body == {'board': 'Shroomies', 'id': 1, 'message': 'card 1 message', 'likes': 1}
+    assert response.status_code == 200
+
+
+
 def test_validate_model_returns_model(two_saved_boards):
     model_id = 1
     model = Board
