@@ -67,4 +67,4 @@ def delete_one_board(board_id):
     db.session.delete(board)
     db.session.commit()
 
-    return make_response(f"Board {board.board_id} successfully deleted")
+    return make_response(board.to_dict())
