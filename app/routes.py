@@ -4,11 +4,12 @@ from app.models.board import Board
 from app.models.card import Card
 
 # example_bp = Blueprint('example_bp', __name__)
-board_bp = Blueprint("boards", __name__, url_prefix = "/boards")
-card_bp = Blueprint("cards", __name__, url_prefix = "/cards")
+board_bp = Blueprint("boards", __name__, url_prefix="/boards")
+card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 #####   ---   BOARD ROUTES   -   #####
-#POST - Create New Boards
+# POST - Create New Boards
+
 
 @board_bp.route("", methods=["POST"])
 def create_new_board():
@@ -16,21 +17,15 @@ def create_new_board():
     request_body = request.get_json()
     if "title" not in request_body or "owner" not in request_body:
         return make_response({"details": "Invalid data"}, 400)
+
     new_board = Board(
-        title = request_body["title"],
-        owner = request_body["owner"],
+        title=request_body["title"],
+        owner=request_body["owner"],
     )
     db.session.add(new_board)
-    db.session.commit() 
-    return jsonify({
-        "board": {
-            "id": new_board.board_id,
-            "title": new_board.title,
-            "owner": new_board.owner,
-            "cards": []
-        }
-    }), 201
+    db.session.commit()
 
+    return make_response(new_board.to_dict(), 201)
 
 
 #  GET - Read ALL boards
@@ -45,65 +40,71 @@ def read_all_boards():
     return jsonify(boards_response)     # returns jsonify boards response
 
 # GET - Read ONE board
-@board_bp.route("/<board_id>", methods = ["GET"])
+
+
+@board_bp.route("/<board_id>", methods=["GET"])
 def read_board_by_id(board_id):
-    board = validate_model(Board, board_id)     # helper function validate id and return board dict
+    # helper function validate id and return board dict
+    board = validate_model(Board, board_id)
 
     print("****** ", make_board_dict(board), " ******")
-    return {"board": make_board_dict(board)}, 200    # returns board in dict form
+    # returns board in dict form
+    return {"board": make_board_dict(board)}, 200
 
 # GET - Read ALL CARDS by Board id
-@board_bp.route("/<board_id>/cards", methods = ["GET"])
+
+
+@board_bp.route("/<board_id>/cards", methods=["GET"])
 def read_cards_by_board_id(board_id):
     cards_response = []
     board = validate_model(Board, board_id)
 
     cards_response = [make_card_dict(card) for card in board.cards]
 
-    return jsonify ({
+    return jsonify({
         "board id": board_id,
         "board title": board.title,
         "cards": cards_response
     })
 
 
-
 #####   ---   CARD ROUTES   -   #####
 #   GET - Read ALL cards
-@card_bp.route("", methods = ["GET"])
+@card_bp.route("", methods=["GET"])
 def read_all_cards():
     cards_response = []                 # initialize list to hold all cards returned
     cards = Card.query.all()            # call to get all Cards
 
     # calls make_card_dict() to populate Card class attributes for each card and appends to list
     cards_response = [make_card_dict(card) for card in cards]
-    
+
     return jsonify(cards_response)      # returns jsonify cards response
-    
+
 #   GET - Read ONE card
-@card_bp.route("/<card_id>", methods = ["GET"])
+
+
+@card_bp.route("/<card_id>", methods=["GET"])
 def read_card_by_id(card_id):
-    card = validate_model(Card, card_id)
-    
-    return (f"{card_id}: ${make_card_dict(card)}")       # returns card # in dict form
-    
+    card = validate_model(Card, Card, card_id)
+
+    # returns card # in dict form
+    return (f"{card_id}: ${make_card_dict(card)}")
+
 # CREATE - Create new card
+
 
 @card_bp.route("", methods=["POST"])
 def create_new_card():
     request_body = request.get_json()
-    # new_card = Card.from_dict(request_body)
-    new_card = Card(
-        # card_id = request_body["id"],
-        message = request_body["message"]
-    )
+    new_card = Card.from_dict(request_body)
     
     db.session.add(new_card)
     db.session.commit()
 
     return jsonify(f"Card {new_card.name} successfully created for your message!"), 201
 
-#CREATE - Create card for board 
+# CREATE - Create card for board
+
 
 @board_bp.route("/<board_id>/cards", methods=["POST"])
 def create_card_by_id(board_id):
@@ -124,14 +125,13 @@ def create_card_by_id(board_id):
     return jsonify(f"Card {new_card.name} owned by {new_card.board.name} was successfully created."), 201
 
 
-
-#DELETE - Delete ONE card
+# DELETE - Delete ONE card
 @card_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
 def delete_card_by_id(card_id):
     card = validate_model(Card, card_id)
     db.session.delete(card)
     db.session.commit()
-    return abort(make_response({"details":f"Card {card.card_id} successfully deleted"}))
+    return abort(make_response({"details": f"Card {card.card_id} successfully deleted"}))
 
 # copy pasta from task-list to delete (overwrite) the dolphins
 @card_bp.route("/<board_id>", methods=["PATCH"])
@@ -147,6 +147,7 @@ def update_card_title(board_id):
         "owner": board.owner,
         "cards": []
     }}
+    db.session.commit()
 
 
 #####   ---   HELPER FUNCTIONS   -   #####
@@ -185,6 +186,6 @@ def make_board_dict(board):
 #       Returns: card dictionary
 def make_card_dict(card):
     return dict(
-        message = card.message,
-        likes_count = card.likes_count
+        message=card.message,
+        likes_count=card.likes_count
     )

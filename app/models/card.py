@@ -8,7 +8,12 @@ class Card(db.Model):
     board = db.relationship("Board", back_populates="cards", lazy=True)
     board_id = db.Column(db.Integer, db.ForeignKey(
         "board.board_id", ), nullable=True)
-        
+
+# def to_dict(self)
+#     def to_dict(self):
+#             "id": self.id,
+#             "message": self.self,
+
     # def to_dict(self):
     #     card_as_dict = {}
     #     card_as_dict["id"] = self.card_id
@@ -16,10 +21,9 @@ class Card(db.Model):
     #     card_as_dict["likes_count"] = self.likes_count
     #     return card_as_dict
 
-
     def to_dict(self):
         return {
-            "id": self.id,
+            "id": self.card_id,
             "message": self.message,
             "likes_count": self.likes_count
         }

@@ -17,17 +17,19 @@ def test_create_board(client):
     # Assert
     assert response.status_code == 201
     assert "board" in response_body
-    assert response_body == [{
+    assert response_body == {
         "board": {
+            "cards": [],
             "id": 1,
-            "board": "Test Board",
+            "title": "Test Board",
             "owner": "Test User",
         }
-    }]
+    }
     new_board = Board.query.get(1)
     assert new_board
     assert new_board.title == "Test Board"
     assert new_board.owner == "Test User"
+    assert new_board.cards == []
 
 
 # @pytest.mark.skip
