@@ -1,4 +1,5 @@
 from app.models.board import Board
+from app.models.card import Card
 import pytest
 
 def test_get_boards_no_saved_boards(client):
@@ -79,22 +80,6 @@ def test_get_all_boards(client, three_boards):
         },
     ]
 
-# def test_get_cards_for_specific_board_no_cards(client, one_board):
-#     # Act
-#     response = client.get("/boards/1/cards")
-#     response_body = response.get_json()
-
-#     # Assert
-#     assert response.status_code == 200
-#     assert "cards" in response_body
-#     assert len(response_body["cards"]) == 0
-#     assert response_body == {
-#         "id": 1,
-#         "title": "First Title",
-#         "owner": "First Owner",
-#         "cards": []
-#     }
-
 def test_delete_board(client, one_board):
     # Act
     response = client.delete("/boards/1")
@@ -144,6 +129,7 @@ def test_post_card_to_goal_by_goal_id(client, one_board, one_card):
     assert response.status_code == 200
     assert "id" in response_body["card"]
     assert "card" in response_body
+    assert len(response_body) == 1
     assert response_body == {
         "card": {
             "id": 2,
@@ -152,6 +138,3 @@ def test_post_card_to_goal_by_goal_id(client, one_board, one_card):
         }
 
     }
-
-    # Check that Goal was updated in the db
-    # assert len(Board.query.get(1).card) == 1

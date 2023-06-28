@@ -46,7 +46,7 @@ def delete_cards(model_id):
     db.session.delete(card)
     db.session.commit()
 
-    return jsonify({"details": f'Card {model_id} "{card.message}"successfully deleted'}), 200
+    return jsonify({"details": f'Card {model_id} "{card.message}" successfully deleted'}), 200
 
 
 @cards_bp.route("/<model_id>/like", methods=["PUT"])
