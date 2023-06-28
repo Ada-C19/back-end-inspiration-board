@@ -13,7 +13,7 @@ class Card(db.Model):
 #     def to_dict(self):
 #             "id": self.id,
 #             "message": self.self,
-        
+
     # def to_dict(self):
     #     card_as_dict = {}
     #     card_as_dict["card_id"] = self.card_id
@@ -22,10 +22,9 @@ class Card(db.Model):
     #     card_as_dict["board"] = self.board
     #     return book_as_dict
 
-
     def to_dict(self):
         return {
-            "id": self.id,
+            "id": self.card_id,
             "message": self.message,
             "likes_count": self.likes_count
         }
