@@ -15,6 +15,14 @@ boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 @boards_bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
+
+    is_valid_board_title = "title" in request_body
+    is_valid_board_owner = "owner" in request_body
+    if not is_valid_board_title:
+        abort(make_response({"details": "Please include title"}, 400))
+    if not is_valid_board_owner:
+        abort(make_response({"details": "Please include owner"}, 400))
+
     new_board = Board.board_from_dict(request_body)
 
     db.session.add(new_board)

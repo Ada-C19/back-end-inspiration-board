@@ -22,9 +22,9 @@ def test_get_one_saved_board(client):
 
     assert response.status_code == 200
     assert response_body == {
-        "id": 1,
-        "title": "My Happy Place",
-        "owner": "Amber"
+        "id": 3,
+        "owner": "Amber",
+        "title": "The Keep on Keepin On Board"  
     }
 
 @pytest.mark.skip(reason="Feature not yet built")
