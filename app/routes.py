@@ -83,7 +83,7 @@ def read_all_cards():
 #   GET - Read ONE card
 @card_bp.route("/<card_id>", methods = ["GET"])
 def read_card_by_id(card_id):
-    card = validate_model(card_id)
+    card = validate_model(Card, card_id)
     
     return (f"{card_id}: ${make_card_dict(card)}")       # returns card # in dict form
     
