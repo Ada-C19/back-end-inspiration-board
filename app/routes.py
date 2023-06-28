@@ -62,7 +62,7 @@ def read_card_by_id(card_id):
     
     return (f"{card_id}: ${make_card_dict(card)}")       # returns card # in dict form
     
-# CREATE - Create one card
+# CREATE - Create new card
 
 @cards_bp.route("", methods=["POST"])
 def create_new_card():
@@ -75,6 +75,26 @@ def create_new_card():
     return jsonify(f"Card {new_card.name} successfully created for your message!"), 201
 
 #CREATE - Create card for board 
+
+@hboard_bp.route("/<board_id>/card", methods=["POST"])
+def create_card_by_id(board_id):
+
+    board = validate_model(Board, board_id)
+
+    request_body = request.get_json()
+
+    new_card = Card(
+        color=request_body["color"],
+        message=request_body["message"],
+        board=board
+    )
+
+    db.session.add(new_card)
+    db.session.commit()
+
+    return jsonify(f"Card {new_card.name} owned by {new_card.board.name} was successfully created."), 201
+
+
 #@card_bp.route("/<board_id>/<card_id>", methods="POST")
 #def create_new_card(board.id):
     #new_board_card = Card.from_dict(request_body)
