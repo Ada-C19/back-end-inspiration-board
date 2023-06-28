@@ -37,6 +37,13 @@ def one_card(app):
     db.session.commit()
 
 @pytest.fixture
+def one_board(app):
+    new_board = Board(
+        title="Board Title", owner="owner1")
+    db.session.add(new_board)
+    db.session.commit()
+
+@pytest.fixture
 def three_cards(app):
     db.session.add_all([
         Card(message="Reminder to water plants", likes_count=2),
