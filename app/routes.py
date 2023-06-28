@@ -95,9 +95,6 @@ def create_card_by_id(board_id):
     return jsonify(f"Card {new_card.name} owned by {new_card.board.name} was successfully created."), 201
 
 
-#@card_bp.route("/<board_id>/<card_id>", methods="POST")
-#def create_new_card(board.id):
-    #new_board_card = Card.from_dict(request_body)
 
 #DELETE - Delete ONE card
 @card_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
