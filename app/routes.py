@@ -105,7 +105,7 @@ def create_new_card():
 
 #CREATE - Create card for board 
 
-@board_bp.route("/<board_id>/card", methods=["POST"])
+@board_bp.route("/<board_id>/cards", methods=["POST"])
 def create_card_by_id(board_id):
 
     board = validate_model(Board, board_id)
@@ -134,11 +134,12 @@ def delete_card_by_id(card_id):
     return abort(make_response({"details":f"Card {card.card_id} successfully deleted"}))
 
 # copy pasta from task-list to delete (overwrite) the dolphins
-@card_bp.route("<board_id>", methods=["PATCH"])
+@card_bp.route("/<board_id>", methods=["PATCH"])
 def update_card_title(board_id):
     board = validate_model(Board, board_id)
     # request_body = request.get_json()
     board.cards = []
+    db.session.commit()
     return {
     "board": {
         "id": board.board_id,
@@ -146,7 +147,6 @@ def update_card_title(board_id):
         "owner": board.owner,
         "cards": []
     }}
-    db.session.commit()
 
 
 #####   ---   HELPER FUNCTIONS   -   #####
