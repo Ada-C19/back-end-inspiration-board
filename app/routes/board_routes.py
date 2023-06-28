@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
+from app.routes.helper_functions import validate_model
 
 
 # example_bp = Blueprint('example_bp', __name__)
@@ -28,9 +29,12 @@ def get_all_boards():
     return jsonify(board_response)
 
 # displays all cards for one board
+# test after making card routes
 @board_bp.route("/<board_id>", methods=["GET"])
-def get_one_board():
-    pass
+def get_one_board_and_cards(board_id):
+    board = validate_model(Board, board_id)
+    board_dict = board.get_cards()
+    return make_response(board_dict, 200)
 
 # deletes a board (and associated cards)
 # have to maunally delete all cards
