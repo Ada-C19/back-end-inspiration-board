@@ -21,3 +21,5 @@ def create_card(request_body):
     db.session.add(new_card)
     db.session.commit()
     return new_card.id
+    
+        
