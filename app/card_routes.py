@@ -16,19 +16,19 @@ def make_new_card():
     
     return make_response(f"Card successfully created", 201)
 
-# @card_bp.route("", methods=["GET"])
-# def get_all_cards():
+@card_bp.route("", methods=["GET"])
+def get_all_cards():
 
 #     id_param = request.args.get("board_id")
     
 #     if id_param:
 #         cards = Card.query.filter_by(card_id=id_param)
 #     else:
-#         cards = Card.query.all()
+    cards = Card.query.all()
 
-#     cards_list=[card.make_card_dict()for card in cards]
+    cards_list=[card.make_card_dict()for card in cards]
 
-#     return jsonify(cards_list), 200
+    return jsonify(cards_list), 200
 
 
 @card_bp.route("/<card_id>", methods=["DELETE"])
