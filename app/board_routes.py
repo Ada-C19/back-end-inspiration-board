@@ -54,7 +54,7 @@ def assign_cards_to_board(board_id):
     board = validate_model(Board, board_id)
     
     request_body = request.get_json()
-    card_id = create_card(request_body)
+    card_id = create_card(request_body, board_id)
     
     card = validate_model(Card, card_id)
     board.cards.append(card)

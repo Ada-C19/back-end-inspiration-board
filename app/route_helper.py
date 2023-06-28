@@ -15,8 +15,9 @@ def validate_model(cls, model_id):
 
     return model
 
-def create_card(request_body):
+def create_card(request_body, board_id):
     new_card = Card.from_dict(request_body)
+    new_card.board_id = board_id
 
     db.session.add(new_card)
     db.session.commit()
