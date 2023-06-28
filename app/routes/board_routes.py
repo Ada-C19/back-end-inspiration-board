@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
 
@@ -58,3 +58,13 @@ def read_one_board(board_id):
     board = validate_model(Board, board_id)
 
     return board.to_dict(), 200
+
+# DELETE one board
+@board_bp.route("/<board_id>", methods=["DELETE"])
+def delete_one_board(board_id):
+    board = validate_model(Board, board_id)
+
+    db.session.delete(board)
+    db.session.commit()
+
+    return make_response(f"Board {board.board_id} successfully deleted")
