@@ -39,3 +39,12 @@ def delete_one_board(card_id):
     db.session.commit()
 
     return jsonify(response_body)
+
+@cards_bp.route("/<card_id>", methods=["PATCH"])
+def increase_like_count(card_id):
+    card = validate_model(Card, card_id)
+    
+    card.likes_count += 1
+
+    db.session.commit()
+    return make_response(card.card_to_dict(), 200)
