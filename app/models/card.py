@@ -18,8 +18,7 @@ class Card(db.Model):
     
     @classmethod
     def from_dict(cls, data_dict):
+        # the only thing we need to customize on the board is the message
         return cls(
-            message = data_dict["message"],
-            #should we add likes count?
-            likes_count = data_dict["likes_count"]
+            message = data_dict["message"]
         )
