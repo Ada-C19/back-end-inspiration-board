@@ -122,11 +122,13 @@ def delete_card_by_id(card_id):
 
 
 
-@card_bp.route("/<board_id>", methods=["PATCH"])
+@board_bp.route("/<board_id>/cards", methods=["PATCH"])
 def update_card_title(board_id):
     board = validate_model(Board, board_id)
     # request_body = request.get_json()
     board.cards = []
+
+    db.session.commit()
     return {
         "board": {
             "id": board.board_id,
@@ -134,7 +136,7 @@ def update_card_title(board_id):
             "owner": board.owner,
             "cards": []
         }}
-    db.session.commit()
+    
 
 
 #####   ---   HELPER FUNCTIONS   -   #####
