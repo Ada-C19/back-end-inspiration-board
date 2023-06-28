@@ -2,9 +2,11 @@ from app import db
 from flask import Blueprint, request, jsonify, make_response, abort
 from app.models.board import Board
 from app.models.card import Card
+from .route_helper import validate_model
 
 bp = Blueprint('boards', __name__, url_prefix="/boards")
 
+# CREATE
 # create a board endpoint, returns 201 if successful
 @bp.route("", methods=["POST"])
 def create_board():
@@ -17,20 +19,7 @@ def create_board():
 
     return jsonify({"board": new_board.to_dict()}), 201
 
-def validate_model(cls, model_id):
-    try: 
-        model_id = int(model_id)
-    except: 
-        abort(make_response({"message": f"{cls.__name__} {model_id} invalid"}, 400))
-
-    model = cls.query.get(model_id)
-
-    if not model:
-        abort(make_response({"message":f"{cls.__name__} {model_id} not found"}, 404))
-
-    return model
-
-
+# READ
 # Gets all Boards and returns 200
 @bp.route("", methods=["GET"])
 def read_all_books():
@@ -58,6 +47,7 @@ def retrieve_cards(board_id):
         cards_response.append(card.to_dict())
     return jsonify(cards_response), 200
 
+# UPDATE
 # assign cards to a board
 @bp.route("/<board_id>/cards", methods=["POST"])
 def assign_cards_to_board(board_id):

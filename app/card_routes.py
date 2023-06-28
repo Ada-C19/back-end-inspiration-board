@@ -1,13 +1,14 @@
 from app import db
 from flask import Blueprint, request, jsonify, make_response
 from app.models.card import Card
+from .route_helper import validate_model
 
 bp = Blueprint('cards', __name__, url_prefix="/cards")
 
 # create a card endpoint
 # @bp.route("", methods=["POST"])
 
-# get all cards endppint
+# get all cards endpoint
 # @bp.route("", methods=["GET"])
 
 # get one card by ID endpoint
