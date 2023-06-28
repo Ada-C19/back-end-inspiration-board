@@ -8,6 +8,31 @@ board_bp = Blueprint("boards", __name__, url_prefix = "/boards")
 card_bp = Blueprint("cards", __name__, url_prefix = "/cards")
 
 #####   ---   BOARD ROUTES   -   #####
+#POST - Create New Boards
+
+@board_bp.route("", methods=["POST"])
+def create_new_board():
+    # validate board credentials
+    request_body = request.get_json()
+    if "title" not in request_body or "owner" not in request_body:
+        return make_response({"details": "Invalid data"}, 400)
+    new_board = Board(
+        title = request_body["title"],
+        owner = request_body["owner"],
+    )
+    db.session.add(new_board)
+    db.session.commit() 
+    return jsonify({
+        "board": {
+            "id": new_board.board_id,
+            "title": new_board.title,
+            "owner": new_board.owner,
+            "cards": []
+        }
+    }), 201
+
+
+
 #  GET - Read ALL boards
 @board_bp.route("", methods=["GET"])
 def read_all_boards():
@@ -64,7 +89,7 @@ def read_card_by_id(card_id):
     
 # CREATE - Create new card
 
-@cards_bp.route("", methods=["POST"])
+@card_bp.route("", methods=["POST"])
 def create_new_card():
     request_body = request.get_json()
     new_card = Card.from_dict(request_body)
@@ -76,7 +101,7 @@ def create_new_card():
 
 #CREATE - Create card for board 
 
-@hboard_bp.route("/<board_id>/card", methods=["POST"])
+@board_bp.route("/<board_id>/card", methods=["POST"])
 def create_card_by_id(board_id):
 
     board = validate_model(Board, board_id)

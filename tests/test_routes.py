@@ -5,7 +5,7 @@ import pytest
 
 ###### BOARD TESTS ######
 
-# @pytest.mark.skip(reason="No way to test this feature yet")
+# @pytest.mark.skip
 def test_create_board(client):
     # Act
     response = client.post("/boards", json={
@@ -28,6 +28,40 @@ def test_create_board(client):
     assert new_board
     assert new_board.title == "Test Board"
     assert new_board.owner == "Test User"
+
+
+# @pytest.mark.skip
+def test_get_error_to_create_board_with_missing_title(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "Test Board"
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert "details" in response_body
+    assert response_body == {
+        "details": "Invalid data"
+    }
+    assert Board.query.all() == []
+
+
+# @pytest.mark.skip
+def test_get_error_to_create_board_with_missing_owner(client):
+    # Act
+    response = client.post("/boards", json={
+        "owner": "Test User"
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert "details" in response_body
+    assert response_body == {
+        "details": "Invalid data"
+    }
+    assert Board.query.all() == []
 
 
 # @pytest.mark.skip
