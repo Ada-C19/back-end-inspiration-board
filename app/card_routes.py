@@ -19,11 +19,6 @@ def make_new_card():
 @card_bp.route("", methods=["GET"])
 def get_all_cards():
 
-#     id_param = request.args.get("board_id")
-    
-#     if id_param:
-#         cards = Card.query.filter_by(card_id=id_param)
-#     else:
     cards = Card.query.all()
 
     cards_list=[card.make_card_dict()for card in cards]
@@ -39,5 +34,8 @@ def delete_card(card_id):
     db.session.commit()
 
     return make_response(f"Card successfully deleted")
+
+
+# need update like count for card 
 
 

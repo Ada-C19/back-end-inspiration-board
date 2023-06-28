@@ -21,9 +21,4 @@ def validate_model(cls, model_id):
     return model
 
 
-def update_model(model, request_body):
-    for attribute, value in request_body.items():
-        try:
-            setattr(model, attribute, value)
-        except KeyError:
-            abort(make_response({"details": "Invalid data"}, 400))
+

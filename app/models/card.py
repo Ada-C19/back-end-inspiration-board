@@ -15,5 +15,7 @@ class Card(db.Model):
         return dict(
             message=self.message,
             likes_count=self.likes_count,
-            board_id=self.board_id
+            board_id=self.board_id,
         )
+
+
