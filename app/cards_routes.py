@@ -26,3 +26,16 @@ def read_all_cards():
     cards_response = [card.card_to_dict() for card in cards]
 
     return make_response(jsonify(cards_response), 200)
+
+@cards_bp.route("/<card_id>", methods=["DELETE"])
+def delete_one_board(card_id):
+    card = validate_model(Card, card_id)
+
+    response_body = {
+        "details": f"Card {card.id} \"{card.message}\" successfully deleted"
+    }
+
+    db.session.delete(card)
+    db.session.commit()
+
+    return jsonify(response_body)
