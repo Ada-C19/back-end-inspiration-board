@@ -3,8 +3,6 @@ from app import db
 from app.models.board import Board
 from app.models.card import Card
 
-
-
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
 # route to get all boards
@@ -58,9 +56,8 @@ def post_cards_for_specific_board(board_id):
     new_card = Card(message=request_body["message"], board=board)
 
     if len(request_body["message"]) > 40: 
-        abort(make_response({"Error":"Message length must be less than 40."}, 400))
+        abort(make_response({"Error":"Message length must be less than 40 characters."}, 400))
         
-
     db.session.add(new_card)
     db.session.commit()
 

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify
 from app import db
 from app.models.board import Board
 from app.models.card import Card 
@@ -13,6 +13,7 @@ def get_one_card(card_id):
 
     return jsonify(card_response), 200
 
+# route to delete a card
 @cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
     card = Card.query.get(card_id)
