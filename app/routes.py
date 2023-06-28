@@ -92,7 +92,11 @@ def read_card_by_id(card_id):
 @card_bp.route("", methods=["POST"])
 def create_new_card():
     request_body = request.get_json()
-    new_card = Card.from_dict(request_body)
+    # new_card = Card.from_dict(request_body)
+    new_card = Card(
+        # card_id = request_body["id"],
+        message = request_body["message"]
+    )
     
     db.session.add(new_card)
     db.session.commit()
