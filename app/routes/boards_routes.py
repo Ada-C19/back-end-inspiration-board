@@ -16,6 +16,14 @@ def get_all_boards():
 
     return jsonify(board_response), 200
 
+# route to get one board
+@boards_bp.route("/<board_id>", methods=["GET"])
+def get_one_board(board_id):
+    board = Board.query.get(board_id)
+    board_response = Board.to_dict_boards(board)
+
+    return jsonify(board_response), 200
+
 # route to post a new board
 @boards_bp.route("", methods=["POST"])
 def create_board():
@@ -52,4 +60,14 @@ def post_cards_for_specific_board(board_id):
     db.session.commit()
 
     return jsonify(f"A card with id {new_card.card_id} was added to Board {new_card.board.title}!"), 201
+
+# route to delete one board
+@boards_bp.route("/<board_id>", methods=["DELETE"])
+def delete_board(board_id):
+    board = Board.query.get(board_id)
+
+    db.session.delete(board)
+    db.session.commit()
+
+    return jsonify(f"Board with id {board.board_id} was deleted!"), 200
 
