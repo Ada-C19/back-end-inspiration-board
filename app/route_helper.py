@@ -22,5 +22,11 @@ def create_card(request_body, board_id):
     db.session.add(new_card)
     db.session.commit()
     return new_card.id
+
+def validate_message_length(request_body):
+    if len(request_body["message"]) <= 40:
+        return
+    else:
+        abort(make_response({"details": "Message cannot exceed 40 characters"}, 400))
     
         

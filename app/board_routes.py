@@ -2,7 +2,7 @@ from app import db
 from flask import Blueprint, request, jsonify, make_response, abort
 from app.models.board import Board
 from app.models.card import Card
-from .route_helper import validate_model, create_card
+from .route_helper import validate_model, create_card, validate_message_length
 
 bp = Blueprint('boards', __name__, url_prefix="/boards")
 
@@ -22,7 +22,7 @@ def create_board():
 # READ
 # Gets all Boards and returns 200
 @bp.route("", methods=["GET"])
-def read_all_books():
+def read_all_boards():
     boards = Board.query.all()
 
     board_response = []
@@ -54,6 +54,7 @@ def assign_cards_to_board(board_id):
     board = validate_model(Board, board_id)
     
     request_body = request.get_json()
+    validate_message_length(request_body)
     card_id = create_card(request_body, board_id)
     
     card = validate_model(Card, card_id)

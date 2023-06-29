@@ -9,7 +9,7 @@ def test_get_boards_no_saved_boards(client):
     assert response.status_code == 200
     assert response_body == []
 
-def test_get_goal(client, one_board):
+def test_get_board(client, one_board):
     # Act
     response = client.get("/boards/1")
     response_body = response.get_json()
