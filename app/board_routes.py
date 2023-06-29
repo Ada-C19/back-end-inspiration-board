@@ -47,7 +47,7 @@ def create_card(board_id):
     db.session.add(card)
     db.session.commit()
 
-    return make_response({"id": board.board_id, "card_id": card.card_id}), 200
+    return make_response(card.to_dict()), 201
 
 @boards_bp.route('/<board_id>/cards', methods=['GET'])
 def get_all_cards(board_id):
