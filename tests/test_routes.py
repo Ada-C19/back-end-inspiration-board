@@ -218,7 +218,7 @@ def test_delete_board(client, one_board):
     assert response_body == {
         "details": 'Board 1 successfully deleted'
     }
-    assert Board.queryoil9.get(1) == None
+    assert Board.query.get(1) == None
 
 
 # @pytest.mark.skip
