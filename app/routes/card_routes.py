@@ -21,9 +21,16 @@ def create_card_for_board():
         abort(make_response({"details":"Invalid data"}, 400))
 
 @card_bp.route("<card_id>", methods=["PATCH"])
-def update_one_card_likes():
-    pass
+def add_like_to_one_card(card_id):
+    card = validate_model(Card, card_id)
+    card.likes_count += 1
+    db.session.commit()
+    return make_response({"card": card.to_dict()}, 200)
 
 @card_bp.route("<card_id>", methods=["DELETE"])
-def delete_one_card():
-    pass
+def delete_one_card(card_id):
+    card = validate_model(Card, card_id)
+    db.session.delete(card)
+    db.session.commit()
+    message = {"details": f"Card {card.card_id} from Board {card.board_id} successfully deleted."}
+    return make_response(message, 200)
