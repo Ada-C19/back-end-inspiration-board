@@ -9,8 +9,8 @@ def test_get_cards_no_saved_cards(client, one_board):
 
     #Assert
     assert response.status_code == 200
-    assert response_body == []
-    
+    assert response_body == []    
+
 
 def test_get_cards_one_saved_card(client, one_card, one_board_belongs_to_one_card):
     # Act
@@ -28,3 +28,15 @@ def test_get_cards_one_saved_card(client, one_card, one_board_belongs_to_one_car
 
 
     
+def test_delete_card(client, one_card):
+    #Act
+    response = client.delete("/cards/1")
+    response_body = response.get_json()
+
+    #Assert
+    assert response.status_code == 200
+    assert "details" in response_body
+    assert response_body == {
+        "details": "Card 1 successfully deleted"
+    }
+    assert Card.query.get(1) == None
