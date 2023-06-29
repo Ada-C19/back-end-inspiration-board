@@ -24,13 +24,10 @@ def test_get_cards_one_saved_card(client, one_card, one_board_belongs_to_one_car
     card = response_body[0]
     assert card['message'] == 'Reminder to water plants'
     assert card['likes_count'] == 2
-
-
-
     
 def test_delete_card(client, one_card):
     #Act
-    response = client.delete("/cards/1")
+    response = client.delete("cards/1")
     response_body = response.get_json()
 
     #Assert
@@ -59,7 +56,7 @@ def test_update_like_on_card(client, one_card):
     assert response.status_code == 200
     assert response_body["likes_count"] == 3
     assert response_body == {
-            "id" : 1,
+            "card_id" : 1,
             "message" : "Reminder to water plants",
             "likes_count" : 3
         }
