@@ -28,8 +28,7 @@ def get_all_boards():
     board_response = [board.to_dict() for board in boards]
     return jsonify(board_response)
 
-# displays all cards for one board
-# test after making card routes
+# displays all data including cards for one board
 @board_bp.route("/<board_id>", methods=["GET"])
 def get_one_board_and_cards(board_id):
     board = validate_model(Board, board_id)
