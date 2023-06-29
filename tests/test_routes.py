@@ -166,11 +166,10 @@ def test_get_400_error_with_invalid_id(client, one_board):
 
 
 # @pytest.mark.skip
-def test_update_board(client, one_board):
+def test_update_board_title(client, one_board):
     # Act
     response = client.patch("/boards/1", json={
-        "title": "Updated Board Title",
-        "owner": "Updated Board Owner",
+        "title": "Updated Board Title"
     })
     response_body = response.get_json()
 
@@ -181,16 +180,40 @@ def test_update_board(client, one_board):
         "board": {
             "board_id": 1,
             "title": "Updated Board Title",
-            "owner": "Updated Board Owner",
+            "owner": "Amethyst",
             "cards": []
         }
     }
     board = Board.query.get(1)
     assert board.title == "Updated Board Title"
-    assert board.owner == "Updated Board Owner"
-
 
 # @pytest.mark.skip
+
+
+def test_update_board_owner(client, one_board):
+    # Act
+    response = client.patch("/boards/1", json={
+        "owner": "Updated Board Owner",
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert "board" in response_body
+    assert response_body == {
+        "board": {
+            "board_id": 1,
+            "title": "Movie Lovers",
+            "owner": "Updated Board Owner",
+            "cards": []
+        }
+    }
+    board = Board.query.get(1)
+    assert board.owner == "Updated Board Owner"
+
+# @pytest.mark.skip
+
+
 def test_get_404_error_to_update_board_not_found(client, one_board):
     # Act
     response = client.patch("/boards/2", json={
@@ -293,4 +316,53 @@ def test_get_card_by_id(client, one_card):
             "message": "Taylor Swift - Dear John!!! Stupid man!",
             "likes_count": 0
         }
+    }
+
+
+# @pytest.mark.skip
+def test_update_card(client, one_card):
+    # Act
+    response = client.patch("/cards/1", json={
+        "message": "Updated Card Message",
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert response_body == {
+        "1": {
+            "card_id": 1,
+            "message": "Updated Card Message",
+            "likes_count": 0
+        }
+    }
+    card = Card.query.get(1)
+    assert card.message == "Updated Card Message"
+
+
+# @pytest.mark.skip
+def test_delete_card(client, one_card):
+    # Act
+    response = client.delete("/cards/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert "details" in response_body
+    assert response_body == {
+        "details": 'Card 1 successfully deleted'
+    }
+    assert Card.query.get(1) == None
+
+
+# @pytest.mark.skip
+def test_get_404_to_delete_card_not_found(client, one_card):
+    # Act
+    response = client.delete("/cards/2")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 404
+    assert response_body == {
+        "message": "Card 2 does not exist"
     }

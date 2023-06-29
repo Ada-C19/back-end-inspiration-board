@@ -68,14 +68,14 @@ def read_board_by_id(board_id):
 
 
 @board_bp.route("/<board_id>", methods=["PATCH"])
-def read_update_board(board_id):
+def update_board(board_id):
     # helper function validate id and return board dict
     board = validate_model(Board, board_id)
     request_body = request.get_json()
 
-    if request_body["title"]:
+    if "title" in request_body:
         board.title = request_body["title"]
-    if request_body["owner"]:
+    if "owner" in request_body:
         board.owner = request_body["owner"]
 
     db.session.commit()
@@ -108,31 +108,8 @@ def delete_board_by_id(board_id):
 #   GET - Read ALL cards
 
 
-@card_bp.route("", methods=["GET"])
-def read_all_cards():
-    cards_response = []                 # initialize list to hold all cards returned
-    cards = Card.query.all()            # call to get all Cards
-
-    # calls make_card_dict() to populate Card class attributes for each card and appends to list
-    cards_response = [card.to_dict() for card in cards]
-
-    return jsonify(cards_response)      # returns jsonify cards response
-
-#   GET - Read ONE card
-
-
-@card_bp.route("/<card_id>", methods=["GET"])
-def read_card_by_id(card_id):
-    card = validate_model(Card, card_id)
-
-    # returns card # in dict form
-    return {
-        card.card_id: card.to_dict()
-    }
-
-
 @board_bp.route("/<board_id>/cards", methods=["POST"])
-def create_card_by_id(board_id):
+def create_card_by_board_id(board_id):
 
     board = validate_model(Board, board_id)
 
@@ -149,15 +126,39 @@ def create_card_by_id(board_id):
     return {"card": new_card.to_dict()}, 201
 
 
-@board_bp.route("/<board_id>/cards", methods=["PATCH"])
-def update_card_title(board_id):
-    board = validate_model(Board, board_id)
-    # request_body = request.get_json()
-    board.cards = []
+@card_bp.route("", methods=["GET"])
+def read_all_cards():
+    cards_response = []        # initialize list to hold all cards returned
+    cards = Card.query.all()   # call to get all Cards
+
+    cards_response = [card.to_dict() for card in cards]
+
+    return jsonify(cards_response)
+
+#   GET - Read ONE card
+
+
+@card_bp.route("/<card_id>", methods=["GET"])
+def read_card_by_id(card_id):
+    card = validate_model(Card, card_id)
+
+    # returns card # in dict form
+    return {
+        card.card_id: card.to_dict()
+    }
+
+
+@card_bp.route("/<card_id>", methods=["PATCH"])
+def update_card_message(card_id):
+    card = validate_model(Card, card_id)
+    request_body = request.get_json()
+
+    card.message = request_body["message"]
 
     db.session.commit()
     return {
-        "board": board.to_dict()}
+        card.card_id: card.to_dict()
+    }, 200
 
 # DELETE - Delete ONE card
 
