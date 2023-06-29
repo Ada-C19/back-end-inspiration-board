@@ -115,6 +115,9 @@ def create_card_by_board_id(board_id):
 
     request_body = request.get_json()
 
+    if len(request_body["message"]) > 40:
+        return {"details": "Message too long. Can only be 40 characters"}, 400
+
     new_card = Card(
         message=request_body["message"],
         board=board

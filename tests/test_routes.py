@@ -284,6 +284,22 @@ def test_create_card(client, one_board):
 
 
 # @pytest.mark.skip
+def test_get_400_error_for_card_message_too_long(client, one_board):
+    # Act
+    response = client.post("/boards/1/cards", json={
+        "message": "Test Card is longer than 40 characters and should not be created",
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert "details" in response_body
+    assert response_body == {
+        "details": "Message too long. Can only be 40 characters"
+    }
+
+
+# @pytest.mark.skip
 def test_get_card(client, one_card):
     # Act
     response = client.get("/cards")
