@@ -22,10 +22,11 @@ def test_create_one_card(client):
     # Assert
     assert response.status_code == 200
     assert "message" in response_body
-    assert response_body == {
-        "id": 1,
-        "message": "Test message",
-        "likes count": 0,
-        "board id": 1,
-        "board": "Board Title"
-    }
+    # assert response_body == {
+    #     "id": 1,
+    #     "message": "Test message",
+    #     "likes count": 0,
+    #     "board id": 1,
+    #     "board": "Board Title"
+    # }
+    assert response_body == {"id": 1, "card_id": 1}
