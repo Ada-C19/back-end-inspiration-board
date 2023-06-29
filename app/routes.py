@@ -7,16 +7,36 @@ from app.models.card import Card
 board_bp = Blueprint("boards", __name__, url_prefix="/boards")
 card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
+
+#####   ---   HELPER FUNCTIONS   -   #####
+
+# Validate Model ID
+# Takes: Model Class Name, Class Info from query
+def validate_model(cls, model_id):
+    try:
+        model_id = int(model_id)
+    except ValueError:
+        abort(make_response(
+            {"message": f"{model_id} is not a valid type. A {(type(model_id))} data type was provided. Must be a valid integer data type."}, 400))
+
+    model = cls.query.get(model_id)
+    if not model:
+        abort(make_response(
+            {"message": f"{cls.__name__} {model_id} does not exist"}, 404))
+
+    return model
+
+
 #####   ---   BOARD ROUTES   -   #####
 # POST - Create New Boards
 
 
 @board_bp.route("", methods=["POST"])
 def create_new_board():
-    # validate board credentials
     request_body = request.get_json()
+    # validate board credentials
     if "title" not in request_body or "owner" not in request_body:
-        return make_response({"details": "Invalid data"}, 400)
+        return make_response({"details": "Invalid data. Must provide title and/or owner."}, 400)
 
     new_board = Board(
         title=request_body["title"],
@@ -25,19 +45,17 @@ def create_new_board():
     db.session.add(new_board)
     db.session.commit()
 
-    return make_response(new_board.to_dict(), 201)
+    return {"board": new_board.to_dict()}, 201
 
 
 #  GET - Read ALL boards
 @board_bp.route("", methods=["GET"])
 def read_all_boards():
-    boards_response = []               # initialize list to hold all boards returned
     boards = Board.query.all()         # call to get all Boards
 
-    # calls make_board_dict helper function to populate Board class attributes for each board and appends to the list
-    boards_response = [make_board_dict(board) for board in boards]
+    boards_response = [board.to_dict() for board in boards]
 
-    return jsonify(boards_response)     # returns jsonify boards response
+    return jsonify(boards_response)
 
 # GET - Read ONE board
 
@@ -47,36 +65,59 @@ def read_board_by_id(board_id):
     # helper function validate id and return board dict
     board = validate_model(Board, board_id)
 
-    print("****** ", make_board_dict(board), " ******")
-    # returns board in dict form
-    return {"board": make_board_dict(board)}, 200
+    return {"board": board.to_dict()}, 200
 
 # GET - Read ALL CARDS by Board id
 
 
+@board_bp.route("/<board_id>", methods=["PATCH"])
+def read_update_board(board_id):
+    # helper function validate id and return board dict
+    board = validate_model(Board, board_id)
+    request_body = request.get_json()
+
+    if request_body["title"]:
+        board.title = request_body["title"]
+    if request_body["owner"]:
+        board.owner = request_body["owner"]
+
+    db.session.commit()
+
+    return {"board": board.to_dict()}, 200
+
+
 @board_bp.route("/<board_id>/cards", methods=["GET"])
 def read_cards_by_board_id(board_id):
-    cards_response = []
     board = validate_model(Board, board_id)
 
-    cards_response = [make_card_dict(card) for card in board.cards]
+    cards_response = [card.to_dict() for card in board.cards]
 
-    return jsonify({
-        "board id": board_id,
-        "board title": board.title,
+    return {
+        "board_id": board.board_id,
+        "title": board.title,
+        "owner": board.owner,
         "cards": cards_response
-    })
+    }, 200
 
+
+@board_bp.route("/<board_id>", methods=["DELETE"])
+def delete_board_by_id(board_id):
+    board = validate_model(Board, board_id)
+    db.session.delete(board)
+    db.session.commit()
+    return make_response({"details": f"Board {board.board_id} successfully deleted"})
 
 #####   ---   CARD ROUTES   -   #####
 #   GET - Read ALL cards
+
+
 @card_bp.route("", methods=["GET"])
 def read_all_cards():
     cards_response = []                 # initialize list to hold all cards returned
     cards = Card.query.all()            # call to get all Cards
 
     # calls make_card_dict() to populate Card class attributes for each card and appends to list
-    cards_response = [make_card_dict(card) for card in cards]
+    cards_response = [card.to_dict() for card in cards]
 
     return jsonify(cards_response)      # returns jsonify cards response
 
@@ -88,8 +129,9 @@ def read_card_by_id(card_id):
     card = validate_model(Card, card_id)
 
     # returns card # in dict form
-    return (f"{card_id}: ${make_card_dict(card)}")
-
+    return {
+        card.card_id: card.to_dict()
+    }
 
 
 @board_bp.route("/<board_id>/cards", methods=["POST"])
@@ -108,18 +150,17 @@ def create_card_by_id(board_id):
     db.session.add(new_card)
     db.session.commit()
 
-    return new_card.to_dict(), 201
+    return {"card": new_card.to_dict()}, 201
 
 # DELETE - Delete ONE card
+
+
 @card_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card_by_id(card_id):
     card = validate_model(Card, card_id)
     db.session.delete(card)
     db.session.commit()
     return abort(make_response({"details": f"Card {card.card_id} successfully deleted"}))
-
-# copy pasta from task-list to delete (overwrite) the dolphins
-
 
 
 @board_bp.route("/<board_id>/cards", methods=["PATCH"])
@@ -131,50 +172,8 @@ def update_card_title(board_id):
     db.session.commit()
     return {
         "board": {
-            "id": board.board_id,
+            "board_id": board.board_id,
             "title": board.title,
             "owner": board.owner,
             "cards": []
         }}
-    
-
-
-#####   ---   HELPER FUNCTIONS   -   #####
-
-# Validate Model ID
-# Takes: Model Class Name, Class Infor from query
-def validate_model(cls, model_id):
-    try:
-        model_id = int(model_id)
-    except ValueError:
-        abort(make_response(
-            {"message": f"{model_id} is not a valid type. A {(type(model_id))} data type was provided. Must be a valid integer data type."}, 400))
-
-    model = cls.query.get(model_id)
-    if not model:
-        abort(make_response(
-            {"message": f"{cls.__name__} {model_id} does not exist"}, 404))
-
-    return model
-
-
-# Make Board into Dictionary
-# note: eventually move to Board Class
-#       Takes: board object from query
-#       Returns: board dictionary
-def make_board_dict(board):
-    return dict(
-        id=board.board_id,
-        title=board.title,
-        owner=board.owner)
-
-
-# Make Card into Dictionary
-# note: move to Card Class
-#       Takes: card object from query
-#       Returns: card dictionary
-def make_card_dict(card):
-    return dict(
-        message=card.message,
-        likes_count=card.likes_count
-    )
