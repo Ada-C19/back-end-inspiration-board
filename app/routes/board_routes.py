@@ -3,13 +3,15 @@ from app import db
 from app.models.board import Board
 from app.models.card import Card
 from app.routes.helper_functions import validate_model
+from app.routes.helper_functions import check_character_limit
 
 board_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
 @board_bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
-
+    check_character_limit(request_body, "title")
+    check_character_limit(request_body, "owner")
     try:
         new_board = Board.from_dict(request_body)
         db.session.add(new_board)

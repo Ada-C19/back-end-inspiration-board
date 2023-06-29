@@ -3,6 +3,7 @@ from app import db
 from app.models.card import Card
 from app.models.board import Board
 from app.routes.helper_functions import validate_model
+from app.routes.helper_functions import check_character_limit
 
 card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
@@ -10,6 +11,7 @@ card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 def create_card_for_board():
     request_body = request.get_json()
     board = validate_model(Board, request_body.get("board_id"))
+    check_character_limit(request_body, "message")
     try:
         new_card = Card.from_dict(request_body)
         new_card.board_id = board.board_id
