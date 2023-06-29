@@ -14,3 +14,12 @@ class Board(db.Model):
             "owner": self.owner,
             "cards": self.cards
         }
+
+    @classmethod
+    def from_dict(cls, request_data):
+        new_board = cls(
+            title=request_data["title"],
+            owner=request_data["owner"]
+        )
+
+        return new_board

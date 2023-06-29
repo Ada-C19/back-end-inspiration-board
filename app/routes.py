@@ -38,10 +38,7 @@ def create_new_board():
     if "title" not in request_body or "owner" not in request_body:
         return make_response({"details": "Invalid data. Must provide title and/or owner."}, 400)
 
-    new_board = Board(
-        title=request_body["title"],
-        owner=request_body["owner"],
-    )
+    new_board = Board.from_dict(request_body)
     db.session.add(new_board)
     db.session.commit()
 
@@ -142,7 +139,6 @@ def create_card_by_id(board_id):
     request_body = request.get_json()
 
     new_card = Card(
-        # likes_count=request_body["likes_count"],
         message=request_body["message"],
         board=board
     )
@@ -151,16 +147,6 @@ def create_card_by_id(board_id):
     db.session.commit()
 
     return {"card": new_card.to_dict()}, 201
-
-# DELETE - Delete ONE card
-
-
-@card_bp.route("/<card_id>", methods=["DELETE"])
-def delete_card_by_id(card_id):
-    card = validate_model(Card, card_id)
-    db.session.delete(card)
-    db.session.commit()
-    return abort(make_response({"details": f"Card {card.card_id} successfully deleted"}))
 
 
 @board_bp.route("/<board_id>/cards", methods=["PATCH"])
@@ -171,9 +157,14 @@ def update_card_title(board_id):
 
     db.session.commit()
     return {
-        "board": {
-            "board_id": board.board_id,
-            "title": board.title,
-            "owner": board.owner,
-            "cards": []
-        }}
+        "board": board.to_dict()}
+
+# DELETE - Delete ONE card
+
+
+@card_bp.route("/<card_id>", methods=["DELETE"])
+def delete_card_by_id(card_id):
+    card = validate_model(Card, card_id)
+    db.session.delete(card)
+    db.session.commit()
+    return make_response({"details": f"Card {card.card_id} successfully deleted"}, 200)
