@@ -14,7 +14,6 @@ class Board(db.Model):
             title=board_data["title"],
             owner=board_data["owner"]
         )
-
         return new_board
 
     # turn response into dict, using this on an object
