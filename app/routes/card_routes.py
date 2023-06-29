@@ -4,7 +4,6 @@ from app.models.card import Card
 from app.models.board import Board
 from app.routes.helper_functions import validate_model
 
-# example_bp = Blueprint('example_bp', __name__)
 card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 @card_bp.route("", methods=["POST"])
