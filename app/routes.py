@@ -50,9 +50,12 @@ def create_new_board():
 def read_all_boards():
     boards = Board.query.all()         # call to get all Boards
 
-    boards_response = [board.to_dict() for board in boards]
+    # boards_response = [board.to_dict() for board in boards]
 
-    return jsonify(boards_response)
+    # return jsonify(boards_response)
+
+    boards_reponse = [jsonify(board.to_dict()) for board in boards]
+    return boards_reponse
 
 # GET - Read ONE board
 
