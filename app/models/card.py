@@ -13,7 +13,7 @@ class Card(db.Model):
         card_dict = {}
         card_dict = dict(card_id=self.card_id,
                          message=self.message,
-                         likes_count=self.likes_count,
+                         likes_count=0,
                          board_id=self.board_id)
         return card_dict
 

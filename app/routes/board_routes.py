@@ -60,31 +60,6 @@ def post_card_to_board(board_id):
         return "Error: Invalid board_id"
     except(KeyError):
         return make_response({"details": "Invalid data"}, 400)
-    
-
-
-
-    # {
-    #         "board_id": 1,
-    #         "likes_count": 0,
-    #         "message": "Hi there"
-    #     }
-
-    # try:
-    #     board = validate_model(Board, board_id)
-    #     request_body = request.get_json()
-    #     card_list = request_body.get("card_ids")
-    #     new_card_ids = []
-    #     for card in card_list:
-    #         card = validate_model(Card, card)
-    #         card.board_id = board.board_id
-    #         new_card_ids.append(card.card_id)
-
-    #     db.session.commit()
-    #     return make_response(jsonify({"id": board.board_id, "card_ids": new_card_ids}), 200)
-
-    # except KeyError as error:
-    #     abort(make_response({"details": "Data not found"}, 404))
 
 
 @board_bp.route("/<board_id>/cards", methods=["GET"])
