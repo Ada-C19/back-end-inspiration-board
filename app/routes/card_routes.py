@@ -3,7 +3,7 @@ from app.models.board import Board
 from app.models.card import Card
 from flask import Blueprint, request, jsonify, make_response, abort
 from app.routes.route_helpers import validate_model, create_item, \
-    get_all_items, get_item, update_item, delete_item
+    get_all_items, get_item, update_item, delete_item, update_likes
 
 
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
@@ -26,10 +26,8 @@ def update_card(card_id):
 
 @cards_bp.route("/<card_id>/like", methods=["PATCH"])
 def like_card(card_id):
-    card = validate_model(Card, card_id)
-    card.likes_count += 1
+    return update_likes(Card, card_id, 1)
 
-    db.session.commit()
-    result = {"card": card.to_dict()}
-
-    return jsonify(result), 200
+@cards_bp.route("/<card_id>/unlike", methods=["PATCH"])
+def unlike_card(card_id):
+    return update_likes(Card, card_id, -1)

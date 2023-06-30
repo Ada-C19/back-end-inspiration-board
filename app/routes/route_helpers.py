@@ -72,3 +72,11 @@ def delete_item(cls, item_id):
 
     result = {"details": f'{cls.__name__} #{item.id} successfully deleted'}
     return make_response(result, 200)
+
+def update_likes(cls, item_id, change):
+    item = validate_model(cls, item_id)
+    item.likes_count += change
+    db.session.commit()
+    result = {cls.__name__.lower(): item.to_dict()}
+
+    return jsonify(result), 200
