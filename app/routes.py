@@ -46,23 +46,39 @@ def create_new_board():
 
 
 #  GET - Read ALL boards
+# @board_bp.route("", methods=["GET"])
+# def read_all_boards():
+#     boards = Board.query.all()         # call to get all Boards
+
+#     # boards_response = [board.to_dict() for board in boards]
+#     # return jsonify(boards_response)
+
+#     # for each board, it has a card = [] > serialized == dictionary
+#     # >> go in and card = card.to_dict()
+
+#     boards_reponse = [board.to_dict() for board in boards]
+#     for board in boards_reponse:
+#         print(board)
+#         print("before:", board["cards"])
+#         board["cards"] = board["cards"].to_dict()
+#         print("after", board["cards"])
+#     return boards_reponse
+
+
 @board_bp.route("", methods=["GET"])
-def read_all_boards():
-    boards = Board.query.all()         # call to get all Boards
+def get_all_boards():
+    boards = Board.query.all()
+    boards_response = []
+    for board in boards:
+        boards_response.append({
+    "id": board.board_id,
+    "title": board.title,
+    "owner": board.owner,
+    "cards": board.cards
+        })
+    return jsonify(boards_response)
 
-    # boards_response = [board.to_dict() for board in boards]
-    # return jsonify(boards_response)
 
-    # for each board, it has a card = [] > serialized == dictionary
-    # >> go in and card = card.to_dict()
-
-    boards_reponse = [board.to_dict() for board in boards]
-    for board in boards_reponse:
-        print(board)
-        print("before:", board["cards"])
-        board["cards"] = board["cards"].to_dict()
-        print("after", board["cards"])
-    return boards_reponse
 
 # GET - Read ONE board
 
