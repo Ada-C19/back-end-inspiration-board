@@ -1,4 +1,5 @@
 from app import db
+from app.models.card import Card
 
 
 class Board(db.Model):
@@ -8,11 +9,9 @@ class Board(db.Model):
     cards = db.relationship("Card", back_populates="board")
 
     def to_dict(self):
-
         card_response = []
         for card in self.cards:
-            dict(card)
-            card_response.append(card)
+            card_response.append(Card.to_dict())
 
         return {
             "board_id": self.board_id,

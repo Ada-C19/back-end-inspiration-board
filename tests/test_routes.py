@@ -114,6 +114,30 @@ def test_get_board_by_id(client, one_board):
         }
     }
 
+# @pytest.mark.skip
+
+
+def test_get_all_boards_with_cards(client, one_board_with_one_card):
+    # Act
+    response = client.get("/boards")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert len(response_body["cards"]) == 1
+    assert response_body == [{
+        "board_id": 1,
+        "title": "Movie Lovers",
+        "owner": "Amethyst",
+        "cards": [
+            {
+                "card_id": 1,
+                "message": "Taylor Swift - Dear John!!! Stupid man!",
+                "likes_count": 0,
+            }
+        ]
+    }]
+
 
 # @pytest.mark.skip
 def test_get_board_by_id_with_cards(client, one_board_with_one_card):
