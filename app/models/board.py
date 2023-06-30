@@ -8,11 +8,17 @@ class Board(db.Model):
     cards = db.relationship("Card", back_populates="board")
 
     def to_dict(self):
+
+        card_response = []
+        for card in self.cards:
+            dict(card)
+            card_response.append(card)
+
         return {
             "board_id": self.board_id,
             "title": self.title,
             "owner": self.owner,
-            "cards": self.cards
+            "cards": card_response
         }
 
     @classmethod
