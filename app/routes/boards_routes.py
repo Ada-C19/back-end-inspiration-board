@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify, make_response, abort
+import requests
 from app import db
 from app.models.board import Board
 from app.models.card import Card
+import os
 
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
@@ -61,7 +63,21 @@ def post_cards_for_specific_board(board_id):
     db.session.add(new_card)
     db.session.commit()
 
+    slack_notification(new_card)
+
     return jsonify(f"A card with id {new_card.card_id} was added to Board {new_card.board.title}!"), 201
+
+def slack_notification(new_card):
+    token = os.environ.get("slack_token")
+    slack_url = "https://slack.com/api/chat.postMessage"
+    headers = {"Authorization":token}
+    body = {
+        "channel": "inspiration-board",
+        "text": f"Someone just added a card with the message {new_card.message}", 
+    }
+
+    requests.post(slack_url, headers=headers, json=body)
+    return
 
 # route to delete one board
 @boards_bp.route("/<board_id>", methods=["DELETE"])
