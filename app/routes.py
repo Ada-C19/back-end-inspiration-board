@@ -46,13 +46,39 @@ def create_new_board():
 
 
 #  GET - Read ALL boards
+# @board_bp.route("", methods=["GET"])
+# def read_all_boards():
+#     boards = Board.query.all()         # call to get all Boards
+
+#     # boards_response = [board.to_dict() for board in boards]
+#     # return jsonify(boards_response)
+
+#     # for each board, it has a card = [] > serialized == dictionary
+#     # >> go in and card = card.to_dict()
+
+#     boards_reponse = [board.to_dict() for board in boards]
+#     for board in boards_reponse:
+#         print(board)
+#         print("before:", board["cards"])
+#         board["cards"] = board["cards"].to_dict()
+#         print("after", board["cards"])
+#     return boards_reponse
+
+
 @board_bp.route("", methods=["GET"])
-def read_all_boards():
-    boards = Board.query.all()         # call to get all Boards
-
-    boards_response = [board.to_dict() for board in boards]
-
+def get_all_boards():
+    boards = Board.query.all()
+    boards_response = []
+    for board in boards:
+        boards_response.append({
+    "board_id": board.board_id,
+    "title": board.title,
+    "owner": board.owner,
+    "cards": board.cards
+        })
     return jsonify(boards_response)
+
+
 
 # GET - Read ONE board
 
@@ -164,6 +190,23 @@ def update_card_message(card_id):
     }, 200
 
 # DELETE - Delete ONE card
+
+#delete all cards
+
+# @board_bp.route("/<board_id>/cards", methods=["PATCH"])
+# def update_card_title(board_id):
+#     board = validate_model(Board, board_id)
+#     # request_body = request.get_json()
+#     board.cards = []
+#     db.session.commit()
+#     return {
+#         "board": {
+#             "id": board.board_id,
+#             "title": board.title,
+#             "owner": board.owner,
+#              "cards": []
+#     }}
+    
 
 
 @card_bp.route("/<card_id>", methods=["DELETE"])
