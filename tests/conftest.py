@@ -43,10 +43,10 @@ def one_board(app):
 @pytest.fixture
 def one_card(app):
     new_card = Card(
-        message="Taylor Swift - Dear John!!! Get out my face, you stupid, man",
+        message="Taylor Swift - Dear John!!! Stupid man!",
         likes_count=0,
     )
-    
+
     db.session.add(new_card)
     db.session.commit()
 
@@ -56,4 +56,5 @@ def one_board_with_one_card(app, one_board, one_card):
     card = Card.query.first()
     board = Board.query.first()
     board.cards.append(card)
+    card.board_id = board.board_id
     db.session.commit()
