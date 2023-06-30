@@ -13,7 +13,7 @@ board_bp = Blueprint("board", __name__, url_prefix="/boards")
 def create_board():
     request_body = request.get_json()
     try:
-        new_board = Board.from_dict(request_body)
+        new_board = Board.from_board_dict(request_body)
         db.session.add(new_board)
         db.session.commit()
         return make_response(jsonify({"board": new_board.to_dict()}), 201)
@@ -48,22 +48,43 @@ def delete_board(board_id):
 
 # ONE-TO-MANY
 @board_bp.route("/<board_id>/cards", methods=["POST"])
-def post_cards_to_board(board_id):
+def post_card_to_board(board_id):
     try:
         board = validate_model(Board, board_id)
         request_body = request.get_json()
-        card_list = request_body.get("card_ids")
-        new_card_ids = []
-        for card in card_list:
-            card = validate_model(Card, card)
-            card.board_id = board.board_id
-            new_card_ids.append(card.card_id)
+        new_card = Card.from_dict(request_body)
+        if new_card.board_id == board.board_id:
+            db.session.add(new_card)
+            db.session.commit()
+            return make_response({"id": board.board_id, "title": board.title, "card": new_card.to_dict()}, 201)
+        return "Error: Invalid board_id"
+    except(KeyError):
+        return make_response({"details": "Invalid data"}, 400)
+    
 
-        db.session.commit()
-        return make_response(jsonify({"id": board.board_id, "card_ids": new_card_ids}), 200)
 
-    except KeyError as error:
-        abort(make_response({"details": "Data not found"}, 404))
+
+    # {
+    #         "board_id": 1,
+    #         "likes_count": 0,
+    #         "message": "Hi there"
+    #     }
+
+    # try:
+    #     board = validate_model(Board, board_id)
+    #     request_body = request.get_json()
+    #     card_list = request_body.get("card_ids")
+    #     new_card_ids = []
+    #     for card in card_list:
+    #         card = validate_model(Card, card)
+    #         card.board_id = board.board_id
+    #         new_card_ids.append(card.card_id)
+
+    #     db.session.commit()
+    #     return make_response(jsonify({"id": board.board_id, "card_ids": new_card_ids}), 200)
+
+    # except KeyError as error:
+    #     abort(make_response({"details": "Data not found"}, 404))
 
 
 @board_bp.route("/<board_id>/cards", methods=["GET"])
