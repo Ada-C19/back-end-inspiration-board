@@ -9,15 +9,10 @@ class Board(db.Model):
     cards = db.relationship("Card", back_populates="board")
 
     def to_dict(self):
-        card_response = []
-        for card in self.cards:
-            card_response.append(Card.to_dict())
-
         return {
             "board_id": self.board_id,
             "title": self.title,
-            "owner": self.owner,
-            "cards": card_response
+            "owner": self.owner
         }
 
     @classmethod

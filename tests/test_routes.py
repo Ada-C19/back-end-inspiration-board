@@ -19,10 +19,9 @@ def test_create_board(client):
     assert "board" in response_body
     assert response_body == {
         "board": {
-            "cards": [],
             "board_id": 1,
             "title": "Test Board",
-            "owner": "Test User",
+            "owner": "Test User"
         }
     }
     new_board = Board.query.get(1)
@@ -90,8 +89,7 @@ def test_get_board_one_saved_board(client, one_board):
         {
             "board_id": 1,
             "title": "Movie Lovers",
-            "owner": "Amethyst",
-            "cards": []
+            "owner": "Amethyst"
         }
     ]
 
@@ -109,8 +107,7 @@ def test_get_board_by_id(client, one_board):
         "board": {
             "board_id": 1,
             "title": "Movie Lovers",
-            "owner": "Amethyst",
-            "cards": []
+            "owner": "Amethyst"
         }
     }
 
@@ -124,18 +121,11 @@ def test_get_all_boards_with_cards(client, one_board_with_one_card):
 
     # Assert
     assert response.status_code == 200
-    assert len(response_body["cards"]) == 1
+    # assert len(response_body["cards"]) == 1
     assert response_body == [{
         "board_id": 1,
         "title": "Movie Lovers",
-        "owner": "Amethyst",
-        "cards": [
-            {
-                "card_id": 1,
-                "message": "Taylor Swift - Dear John!!! Stupid man!",
-                "likes_count": 0,
-            }
-        ]
+        "owner": "Amethyst"
     }]
 
 
@@ -204,8 +194,7 @@ def test_update_board_title(client, one_board):
         "board": {
             "board_id": 1,
             "title": "Updated Board Title",
-            "owner": "Amethyst",
-            "cards": []
+            "owner": "Amethyst"
         }
     }
     board = Board.query.get(1)
@@ -228,8 +217,7 @@ def test_update_board_owner(client, one_board):
         "board": {
             "board_id": 1,
             "title": "Movie Lovers",
-            "owner": "Updated Board Owner",
-            "cards": []
+            "owner": "Updated Board Owner"
         }
     }
     board = Board.query.get(1)

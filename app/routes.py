@@ -46,12 +46,12 @@ def create_new_board():
 
 
 #  GET - Read ALL boards
-# @board_bp.route("", methods=["GET"])
-# def read_all_boards():
-#     boards = Board.query.all()         # call to get all Boards
+@board_bp.route("", methods=["GET"])
+def read_all_boards():
+    boards = Board.query.all()         # call to get all Boards
 
-#     # boards_response = [board.to_dict() for board in boards]
-#     # return jsonify(boards_response)
+    boards_response = [board.to_dict() for board in boards]
+    return jsonify(boards_response)
 
 #     # for each board, it has a card = [] > serialized == dictionary
 #     # >> go in and card = card.to_dict()
@@ -65,18 +65,18 @@ def create_new_board():
 #     return boards_reponse
 
 
-@board_bp.route("", methods=["GET"])
-def get_all_boards():
-    boards = Board.query.all()
-    boards_response = []
-    for board in boards:
-        boards_response.append({
-    "board_id": board.board_id,
-    "title": board.title,
-    "owner": board.owner,
-    "cards": board.cards
-        })
-    return jsonify(boards_response)
+# @board_bp.route("", methods=["GET"])
+# def get_all_boards():
+#     boards = Board.query.all()
+#     boards_response = []
+#     for board in boards:
+#         boards_response.append({
+#     "board_id": board.board_id,
+#     "title": board.title,
+#     "owner": board.owner,
+#     # "cards": board.cards
+#         })
+#     return jsonify(boards_response)
 
 
 
@@ -191,21 +191,21 @@ def update_card_message(card_id):
 
 # DELETE - Delete ONE card
 
-#delete all cards
+# delete all cards
 
-# @board_bp.route("/<board_id>/cards", methods=["PATCH"])
-# def update_card_title(board_id):
-#     board = validate_model(Board, board_id)
-#     # request_body = request.get_json()
-#     board.cards = []
-#     db.session.commit()
-#     return {
-#         "board": {
-#             "id": board.board_id,
-#             "title": board.title,
-#             "owner": board.owner,
-#              "cards": []
-#     }}
+@board_bp.route("/<board_id>/cards", methods=["PATCH"])
+def update_card_title(board_id):
+    board = validate_model(Board, board_id)
+    # request_body = request.get_json()
+    board.cards = []
+    db.session.commit()
+    return {
+        "board": {
+            "id": board.board_id,
+            "title": board.title,
+            "owner": board.owner,
+            "cards": []
+    }}
     
 
 
