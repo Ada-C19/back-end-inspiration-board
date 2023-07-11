@@ -25,6 +25,6 @@ def delete_card(card_id):
     db.session.delete(card)
     db.session.commit()
 
-    response_body = dict(details=f'Card {card.id} "{card.message}" successfully deleted')
+    response_body = dict(details=f'Card {card.id}: {card.message} successfully deleted')
 
     return make_response(jsonify(response_body), 200)    
