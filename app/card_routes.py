@@ -19,4 +19,12 @@ def add_like(card_id):
     return make_response(jsonify(response_body), 200)
 
 # delete a card endpoint
-# @bp.route("/<card_id>", methods=["DELETE"])
+@bp.route("/<card_id>", methods=["DELETE"])
+def delete_card(card_id):
+    card = validate_model(Card, card_id)
+    db.session.delete(card)
+    db.session.commit()
+
+    response_body = dict(details=f'Card {card.id} "{card.message}" successfully deleted')
+
+    return make_response(jsonify(response_body), 200)    

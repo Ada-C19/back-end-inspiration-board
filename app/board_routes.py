@@ -50,7 +50,7 @@ def retrieve_cards(board_id):
 # UPDATE
 # assign cards to a board
 @bp.route("/<board_id>/cards", methods=["POST"])
-def assign_cards_to_board(board_id):
+def add_cards_to_board(board_id):
     board = validate_model(Board, board_id)
     
     request_body = request.get_json()
