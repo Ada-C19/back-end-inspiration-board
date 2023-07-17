@@ -45,7 +45,7 @@ def create_board():
         db.session.add(new_board)
         db.session.commit()
 
-        return jsonify(new_board), 201
+        return jsonify(new_board.to_dict()), 201
     except:
         abort(make_response({"message": "Board input data incomplete"}, 400))
     
@@ -87,7 +87,7 @@ def create_card_for_board(board_id):
 
     post_to_slack(new_card)
 
-    return jsonify(new_card), 201
+    return jsonify(new_card.to_dict()), 201
 
 # get cards for board_id
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
