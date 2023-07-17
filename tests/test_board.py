@@ -11,8 +11,25 @@ def test_get_boards_no_saved_boards(client):
     assert response.status_code == 200
     assert response_body == []
 
-def test_get_boards_one_saved_board(client, one_board):
+def test_get_boards_one_saved_board_no_cards_argument(client, one_board):
     response = client.get("/boards")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == [
+        {
+            "id": 1,
+            "title": "Test Board",
+            "owner": "Test Owner",
+            "description": "Test Description",
+            "theme": "Test Theme",
+            "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
+        }
+    ]
+
+def test_get_boards_one_saved_board_with_cards_details(client, one_board):
+    response = client.get("/boards?cards=details")
     response_body = response.get_json()
 
     assert response.status_code == 200
@@ -29,7 +46,25 @@ def test_get_boards_one_saved_board(client, one_board):
         }
     ]
 
-def test_get_boards_three_saved_boards(client, three_boards):
+def test_get_boards_one_saved_board_with_cards_count(client, one_board):
+    response = client.get("/boards?cards=count")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == [
+        {
+            "id": 1,
+            "title": "Test Board",
+            "owner": "Test Owner",
+            "description": "Test Description",
+            "theme": "Test Theme",
+            "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
+            "cards": 0
+        }
+    ]
+
+def test_get_boards_three_saved_boards_no_cards_arguement(client, three_boards):
     response = client.get("/boards")
     response_body = response.get_json()
 
@@ -43,7 +78,6 @@ def test_get_boards_three_saved_boards(client, three_boards):
             "description": "Test Description 1",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
             "theme": "Test Theme 1",
-            "cards": []
         },
         {
             "id": 2,
@@ -52,7 +86,6 @@ def test_get_boards_three_saved_boards(client, three_boards):
             "description": "Test Description 2",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
             "theme": "Test Theme 2",
-            "cards": []
         },
         {
             "id": 3,
@@ -61,11 +94,10 @@ def test_get_boards_three_saved_boards(client, three_boards):
             "description": "Test Description 3",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
             "theme": "Test Theme 3",
-            "cards": []
         }
     ]
 
-def test_get_board_by_id(client, one_board):
+def test_get_board_by_id_no_cards_argument(client, one_board):
     response = client.get("/boards/1")
     response_body = response.get_json()
 
@@ -78,7 +110,40 @@ def test_get_board_by_id(client, one_board):
             "description": "Test Description",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
             "theme": "Test Theme",
+        }
+    }
+
+def test_get_board_by_id_with_cards_details(client, one_board):
+    response = client.get("/boards/1?cards=details")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == {
+        "board": {
+            "id": 1,
+            "title": "Test Board",
+            "owner": "Test Owner",
+            "description": "Test Description",
+            "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
+            "theme": "Test Theme",
             "cards": []
+        }
+    }
+
+def test_get_board_by_id_with_cards_count(client, one_board):
+    response = client.get("/boards/1?cards=count")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == {
+        "board": {
+            "id": 1,
+            "title": "Test Board",
+            "owner": "Test Owner",
+            "description": "Test Description",
+            "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
+            "theme": "Test Theme",
+            "cards": 0
         }
     }
 
@@ -121,7 +186,6 @@ def test_create_board(client):
                 "description": "Test Description",
                 "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
                 "theme": "Test Theme",
-                "cards": []
             }
         }
 
@@ -151,7 +215,6 @@ def test_update_board(client, one_board):
             "description": "New Description",
             "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
             "theme": "New Theme",
-            "cards": []
         }
     }
 
@@ -284,7 +347,6 @@ def test_create_board_does_not_need_theme_or_time(client):
                 "owner": "Test Owner",
                 "description": "Test Description",
                 "date_created": "Thu, 01 Jun 2023 12:00:00 GMT",
-                "cards": [],
                 "theme": None
             }
         }

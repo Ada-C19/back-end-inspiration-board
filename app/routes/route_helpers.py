@@ -46,11 +46,20 @@ def get_all_items(cls):
     results = [item.to_dict() for item in items]
     return jsonify(results), 200
 
+def get_all_items_with_child(cls, child):
+    items = cls.query.all()
+    results = [item.to_dict(child) for item in items]
+    return jsonify(results), 200
+
 def get_item(cls, item_id):
     item = validate_model(cls, item_id)
     result = {cls.__name__.lower(): item.to_dict()}
     return jsonify(result), 200
 
+def get_item_with_child(cls, item_id, child):
+    item = validate_model(cls, item_id)
+    result = {cls.__name__.lower(): item.to_dict(child)}
+    return jsonify(result), 200
 
 def update_item(cls, item_id):
     item = validate_model(cls, item_id)

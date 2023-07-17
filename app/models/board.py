@@ -14,7 +14,7 @@ class Board(db.Model):
         back_populates="board"
     )
 
-    def to_dict(self):
+    def to_dict(self, child=None):
         board_dict = {
             "id": self.id,
             "owner": self.owner,
@@ -22,8 +22,15 @@ class Board(db.Model):
             "description": self.description,
             "theme": self.theme,
             "date_created": self.date_created,
-            "cards": [card.to_dict() for card in self.cards]
         }
+
+        child_values = {
+            'details': [card.to_dict() for card in self.cards],
+            'count': len(self.cards)
+        }
+
+        if child in child_values:
+            board_dict["cards"] = child_values[child]
 
         return board_dict
 
