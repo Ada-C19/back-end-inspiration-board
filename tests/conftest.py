@@ -38,7 +38,7 @@ def one_card(app):
     db.session.commit()
 
 @pytest.fixture
-def one_card_belongs_to_one_goal(app, one_goal, one_card):
+def one_card_belongs_to_one_board(app, one_board, one_card):
     card = Card.query.first()
     board = Board.query.first()
     board.cards.append(card)
