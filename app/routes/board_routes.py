@@ -60,6 +60,19 @@ def read_cards_on_board(board_id):
     except KeyError as error:
         abort(make_response({"details": "Data not found"}, 404))
 
+#read one card
+@board_bp.route("/<board_id>/cards/<card_id>", methods=["GET"])
+def get_one_card(card_id, board_id):
+    card_object = validate_model(Card, card_id)
+    return make_response({"card": card_object.to_dict()}, 200)
+    # board = validate_model(Board, board_id)
+    # for card in board.cards:
+    #     if card.card_id == card_id:
+    #         db.session.commit()
+    #         return make_response({"card": card.to_dict()}, 200)
+        
+    # abort(make_response({"details": "Card not found"}, 404))
+
 
 # post a card to a board
 @board_bp.route("/<board_id>/cards", methods=["POST"])
@@ -122,6 +135,48 @@ def replace_card(card_id, board_id):
 
 
 # Update a card
+#like count update PATCH
+@board_bp.route("/<board_id>/cards/<card_id>/mark_like", methods=["PATCH"])
+def mark_like(card_id, board_id):
+    # board = validate_model(Board, board_id)
+    card = validate_model(Card, card_id)
+    # try:
+    #     card_id = int(card_id)
+    # except:
+    #     abort(make_response({"details": "Invalid card id"}, 400))
+    # for card in board.cards:
+    #     if card.card_id == card_id:
+    # try:
+    card.likes_count = card.likes_count + 1
+    db.session.commit()
+    return make_response({"card": card.to_dict()}, 200)
+    # except:
+    #     return make_response(jsonify("incomplete information"), 400)
+            
+
+@board_bp.route("/<board_id>/cards/<card_id>/mark_unlike", methods=["PATCH"])
+def mark_unlike(card_id, board_id):
+    # board = validate_model(Board, board_id)
+    card = validate_model(Card, card_id)
+    # try:
+    #     card_id = int(card_id)
+    # except:
+    #     abort(make_response({"details": "Invalid card id"}, 400))
+    # for card in board.cards:
+    #     if card.card_id == card_id:
+    # try:
+    card.likes_count = card.likes_count - 1
+    db.session.commit()
+    return make_response({"card": card.to_dict()}, 200)
+    # except:
+    #     return make_response(jsonify("incomplete information"), 400)
+
+
+
+
+
+
+
 @board_bp.route("/<board_id>/cards/<card_id>", methods=["PATCH"])
 def update_card(card_id, board_id):
     board = validate_model(Board, board_id)
