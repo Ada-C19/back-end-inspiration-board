@@ -35,7 +35,8 @@ def like_card(card_id):
     card = validate_model(Card, card_id)
     card.likes_count += 1
     db.session.commit() 
-    return make_response(f"card {card.id} liked")
+    # return make_response(f"card {card.id} liked")
+    return jsonify(card.make_card_dict())
 
 # DELETE
 @card_bp.route("/<card_id>", methods=["DELETE"])
