@@ -38,10 +38,11 @@ def post_one_card():
 # Delete a card:
 @bp.route("/<card_id>", methods=["Delete"])
 def delete_card(card_id):
+
+    response_object = validate_model(Card, card_id)
+    db.session.delete(response_object)
+    db.session.commit()
     try:
-        response_object = validate_model(Card, card_id)
-        db.session.delete(response_object)
-        db.session.commit()
         return make_response({"card": response_object.to_dict()}, 200)
     except(KeyError):
         return make_response({"details": "incomplete information"}, 400)

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
 from app.models.card import Card
-from ..routes.helper import validate_model
+from ..routes.helper import validate_model, validate_ids
 
 # example_bp = Blueprint('example_bp', __name__)
 board_bp = Blueprint("board", __name__, url_prefix="/boards")
@@ -47,21 +47,7 @@ def delete_board(board_id):
 
 
 # ONE-TO-MANY
-@board_bp.route("/<board_id>/cards", methods=["POST"])
-def post_card_to_board(board_id):
-    try:
-        board = validate_model(Board, board_id)
-        request_body = request.get_json()
-        new_card = Card.from_dict(request_body)
-        if new_card.board_id == board.board_id:
-            db.session.add(new_card)
-            db.session.commit()
-            return make_response({"id": board.board_id, "title": board.title, "card": new_card.to_dict()}, 201)
-        return "Error: Invalid board_id"
-    except(KeyError):
-        return make_response({"details": "Invalid data"}, 400)
-
-
+# Get all cards associated to a board
 @board_bp.route("/<board_id>/cards", methods=["GET"])
 def read_cards_on_board(board_id):
     try:
@@ -73,3 +59,92 @@ def read_cards_on_board(board_id):
 
     except KeyError as error:
         abort(make_response({"details": "Data not found"}, 404))
+
+
+# post a card to a board
+@board_bp.route("/<board_id>/cards", methods=["POST"])
+def post_card_to_board(board_id):
+    try:
+        board = validate_model(Board, board_id)
+        request_body = request.get_json()
+        new_card = Card.from_dict(request_body)
+        # if new_card.board_id == board.board_id:
+        db.session.add(new_card)
+        db.session.commit()
+        return make_response({"id": board.board_id, "title": board.title, "card": new_card.to_dict()}, 201)
+        # return "Error: Invalid board_id"
+    except(KeyError):
+        return make_response({"details": "Invalid data"}, 400)
+
+
+# Delete a card:
+@board_bp.route("/<board_id>/cards/<card_id>", methods=["Delete"])
+def delete_card(card_id, board_id):
+
+    # board = validate_ids(board_id, card_id)
+    board = validate_model(Board, board_id)
+    try:
+        card_id = int(card_id)
+    except:
+        abort(make_response({"details": "Invalid card_id"}, 400))
+
+    for card in board.cards:
+        if card.card_id == card_id:
+            db.session.delete(card)
+            db.session.commit()
+            return make_response({"card": card.to_dict()}, 200)
+
+    abort(make_response({"details": "Card not found"}, 404))
+
+
+# Replace a card
+@board_bp.route("/<board_id>/cards/<card_id>", methods=["PUT"])
+def replace_card(card_id, board_id):
+    board = validate_model(Board, board_id)
+    try:
+        card_id = int(card_id)
+    except:
+        abort(make_response({"details": "Invalid card id"}, 400))
+
+    request_body = request.get_json()
+    for card in board.cards:
+        if card.card_id == card_id:
+            try:
+                card.message = request_body["message"]
+                card.likes_count = request_body["likes_count"]
+                card.board_id = request_body["board_id"]
+                db.session.commit()
+                return make_response({"card": card.to_dict()}, 200)
+            except:
+                return make_response(jsonify("incomplete information"), 400)
+
+    abort(make_response({"details": "Card not found"}, 404))
+
+
+# Update a card
+@board_bp.route("/<board_id>/cards/<card_id>", methods=["PATCH"])
+def update_card(card_id, board_id):
+    board = validate_model(Board, board_id)
+    try:
+        card_id = int(card_id)
+    except:
+        abort(make_response({"details": "Invalid card id"}, 400))
+
+    request_body = request.get_json()
+
+    for card in board.cards:
+        if card.card_id == card_id:
+            if request_body.get("message"):
+                card.message = request_body["message"]
+
+            if request_body.get("likes_count"):
+                card.likes_count = request_body["likes_count"]
+
+            if request_body.get("board_id"):
+                card.board_id = request_body["board_id"]
+
+            db.session.commit()
+            card_object = validate_model(Card, card_id)
+            return make_response({"card": card_object.to_dict()}, 200)
+
+    abort(make_response({"details": "Card not found"}, 404))
