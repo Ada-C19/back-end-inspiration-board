@@ -45,7 +45,7 @@ def create_board():
         db.session.add(new_board)
         db.session.commit()
 
-        return jsonify(f"Board {new_board.id} successfully created."), 201
+        return jsonify(new_board), 201
     except:
         abort(make_response({"message": "Board input data incomplete"}, 400))
     
@@ -62,6 +62,16 @@ def get_boards():
     
     return jsonify(board_response), 200
 
+# delete board 
+@boards_bp.route('/<board_id>', methods=['DELETE'])
+def delete_board(board_id):
+    board = validate_model(Board, board_id)
+
+    db.session.delete(board)
+    db.session.commit()
+
+    return jsonify('Board successfully deleted'), 201
+
 # Create a new card for the selected board
 @boards_bp.route("/<board_id>/cards", methods=["POST"])
 def create_card_for_board(board_id):
@@ -77,7 +87,7 @@ def create_card_for_board(board_id):
 
     post_to_slack(new_card)
 
-    return jsonify('Card was successfully created'), 201
+    return jsonify(new_card), 201
 
 # get cards for board_id
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
