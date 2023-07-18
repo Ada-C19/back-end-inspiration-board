@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 from flask_cors import CORS
+from app.routes.user_routes import user_bp
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -31,6 +32,8 @@ def create_app():
 
     app.register_blueprint(board_bp)
     app.register_blueprint(card_bp)
+    app.register_blueprint(user_bp)
+
     # app.register_blueprint(example_bp)
 
     from app.models.card import Card
