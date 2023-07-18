@@ -80,7 +80,8 @@ def create_card(board_id):
         db.session.add(new_card)
         db.session.commit()
 
-        return make_response(jsonify(f"Card {new_card.card_id} successfully created"), 201)
+       
+        return make_response(new_card.to_dict(), 201)
     except KeyError as e:
         abort(make_response({"message": f"missing required value: {e}"}, 400))
 
@@ -93,3 +94,5 @@ def read_cards(board_id):
     for card in board.cards:
         cards_response.append(card.to_dict())
     return(jsonify(cards_response))
+
+
