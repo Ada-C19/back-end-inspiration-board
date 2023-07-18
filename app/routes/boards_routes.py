@@ -31,11 +31,13 @@ def create_board():
     request_body = request.get_json()
 
     new_board = Board.from_dict_boards(request_body)
+    # board_response = Board.to_dict_boards(new_board)
 
     db.session.add(new_board)
     db.session.commit()
 
-    return jsonify(f"New board with id {new_board.board_id} was created!"), 201
+    # return jsonify(f"New board with id {new_board.board_id} was created!"), 201
+    return jsonify(new_board.to_dict_boards()), 201
 
 # route to get cards of a board
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
@@ -55,7 +57,7 @@ def post_cards_for_specific_board(board_id):
     request_body = request.get_json()
     board = Board.query.get(board_id)
 
-    new_card = Card(message=request_body["message"], board=board)
+    new_card = Card(message=request_body["message"], likes_count=0,board=board)
 
     if len(request_body["message"]) > 40: 
         abort(make_response({"Error":"Message length must be less than 40 characters."}, 400))
@@ -65,7 +67,8 @@ def post_cards_for_specific_board(board_id):
 
     slack_notification(new_card)
 
-    return jsonify(f"A card with id {new_card.card_id} was added to Board {new_card.board.title}!"), 201
+    # return jsonify(f"A card with id {new_card.card_id} was added to Board {new_card.board.title}!"), 201
+    return jsonify(new_card.to_dict_cards()), 201
 
 def slack_notification(new_card):
     token = os.environ.get("slack_token")

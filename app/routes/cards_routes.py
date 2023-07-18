@@ -28,7 +28,7 @@ def delete_card(card_id):
 def update_likes(card_id):
     card = Card.query.get(card_id)
     request_body = request.get_json()
-    card.likes_count = request_body["likes_count"]
+    card.likes_count += 1 
 
     db.session.commit()
 
