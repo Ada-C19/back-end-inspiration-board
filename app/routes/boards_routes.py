@@ -71,7 +71,7 @@ def post_cards_for_specific_board(board_id):
     return jsonify(new_card.to_dict_cards()), 201
 
 def slack_notification(new_card):
-    token = os.environ.get("slack_token")
+    token = os.environ.get("SLACK_API_TOKEN")
     slack_url = "https://slack.com/api/chat.postMessage"
     headers = {"Authorization":token}
     body = {
