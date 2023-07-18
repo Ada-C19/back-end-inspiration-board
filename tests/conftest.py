@@ -32,3 +32,10 @@ def one_board(app):
     db.session.commit()
 
 
+@pytest.fixture
+def one_card(app):
+    new_card = Card(
+        message="Write unit tests"
+    )
+    db.session.add(new_card)
+    db.session.commit()

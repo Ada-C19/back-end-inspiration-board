@@ -10,12 +10,17 @@ migrate = Migrate()
 load_dotenv()
 
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
         "SQLALCHEMY_DATABASE_URI")
+    
+    # set up test environment
+    if config is not None:
+        app.config.update(config) 
+    
 
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
