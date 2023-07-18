@@ -39,3 +39,5 @@ def one_card(app):
     )
     db.session.add(new_card)
     db.session.commit()
+
+    yield new_card

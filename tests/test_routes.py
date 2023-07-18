@@ -59,3 +59,48 @@ def test_create_board(client):
     assert len(response_body) == 1
     assert response.status_code == 201
 
+
+def test_create_board_invalid_data(client):
+    response = client.post("/boards", json={
+        "title": "Inspiration Board"
+    })
+
+    response_body = response.get_json()
+    assert response.status_code == 400
+    assert response_body == {
+        "details": "Invalid data"
+    }
+    assert Board.query.get(1) == None
+
+
+
+def test_delete_board(client, one_board):
+    response = client.delete("/boards/1")
+    response_data = response.get_json()
+
+    assert response.status_code == 200
+    assert response_data == {
+        "details": "Board 1 \"Inspiration Board\" successfully deleted"
+    }
+    assert Board.query.get(1) == None
+    
+
+def test_delete_board_not_found(client):
+    response = client.delete("/boards/1")
+    response_data = response.get_json()
+
+    assert response.status_code == 404
+    assert response_data == {
+        "message": "Board 1 not found"
+    }
+
+
+# @pytest.mark.skip(reason="still writing test")
+def test_post_card_to_board(client, one_board, one_card):
+    response = client.post("boards/1/cards", json={"message": one_card.message})
+    response_data = response.get_json()
+
+    assert response.status_code == 201
+    assert response_data == "Write unit tests successfully posted on Inspiration Board"
+
+
