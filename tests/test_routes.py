@@ -2,6 +2,7 @@ import pytest
 from app.models.board import Board
 from app.models.card import Card
 
+
 def test_get_boards_no_saved_boards(client):
     response = client.get("/boards")
     response_body = response.get_json()
@@ -73,7 +74,6 @@ def test_create_board_invalid_data(client):
     assert Board.query.get(1) == None
 
 
-
 def test_delete_board(client, one_board):
     response = client.delete("/boards/1")
     response_data = response.get_json()
@@ -83,7 +83,7 @@ def test_delete_board(client, one_board):
         "details": "Board 1 \"Inspiration Board\" successfully deleted"
     }
     assert Board.query.get(1) == None
-    
+
 
 def test_delete_board_not_found(client):
     response = client.delete("/boards/1")
