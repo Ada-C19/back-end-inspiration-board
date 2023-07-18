@@ -95,12 +95,12 @@ def test_delete_board_not_found(client):
     }
 
 
-# @pytest.mark.skip(reason="still writing test")
 def test_post_card_to_board(client, one_board, one_card):
     response = client.post("boards/1/cards", json={"message": one_card.message})
     response_data = response.get_json()
 
     assert response.status_code == 201
     assert response_data == "Write unit tests successfully posted on Inspiration Board"
+    assert len(Board.query.get(1).cards) == 1
 
 
