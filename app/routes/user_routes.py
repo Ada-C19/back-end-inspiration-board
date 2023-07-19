@@ -25,17 +25,20 @@ def register_user():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
+    first_name = data.get("first_name")
+    last_name = data.get("last_name")
 
-    if not username or not password:
-        return make_response(jsonify({"message": "Username and password are required."}), 400)
+    if not username or not password or not first_name or not last_name:
+        return make_response(jsonify({"message": "Username, password, first name, and last name are required."}), 400)
 
     existing_user = User.query.filter_by(username=username).first()
     if existing_user:
         return make_response(jsonify({"message": "Username already taken."}), 409)
 
-    new_user = User(username=username, password=password)
+    new_user = User(username=username, password=password, first_name=first_name, last_name=last_name)
     db.session.add(new_user)
     db.session.commit()
 
     return jsonify({"message": "User registered successfully.", "user": new_user.to_dict()}), 201
+
 
