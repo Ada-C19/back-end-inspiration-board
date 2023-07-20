@@ -45,12 +45,11 @@ def retrieve_cards(board_id):
 
     sort_param = request.args.get("sort")
     card_query = Card.query.filter(Card.board_id==board.id)
-    print(card_query)
 
     if sort_param == "asc":
-        card_query = card_query.order_by(Card.likes_count).all()
-    if sort_param == "desc":
-        card_query = card_query.order_by(desc(Card.likes_count)).all()
+        card_query = card_query.order_by(Card.likes_count)
+    elif sort_param == "desc":
+        card_query = card_query.order_by(desc(Card.likes_count))
 
     cards_response = []
     for card in card_query:
