@@ -44,10 +44,11 @@ The Mystical Mycology Muse server is to be used with the [M^3 Dashboard](https:/
 
 | Route | Query Parameter(s) | Query Parameter(s) Description |
 |--|--|--|
-|`POST` `/boards`| `owner` & `title` | Owner and title of board strings in json ex: `{"owner": "Lindsay", "title": "Fungi's 101"}` |
-|`GET` `/boards` | None | Returns list of boards as dictionaries `[{}, {}]`|
-|`POST` `/boards/<board_id>/cards` | `message` | Returns: `Card was successfully created`|
-|`GET` `/boards/<board_id>/cards` | None | Returns list of cards for `<board_id>`: `[{}, {}]`.  This also posts a message to slack.|
+|`POST` `/boards`| `owner` & `title` | Owner and title of board strings in json ex: `{"id": 1, "owner": "Lindsay", "title": "Fungi's 101"}` |
+|`GET` `/boards` | None | Returns list of boards as dictionaries `[{"id": 1, "owner": "Lindsay", "title": "Fungi's 101"}, {...}]`|
+|`DELETE` `/boards/<board_id>` | None | Returns: `Board successfully deleted`|
+|`POST` `/boards/<board_id>/cards` | `message` | Returns: `{"id": 1 "owner": Stacy "title": "Fungi's 101"}`|
+|`GET` `/boards/<board_id>/cards` | None | Returns list of cards for `<board_id>`: `[{'id':  1, message': "I like fungi" 'likes': 1 'board': "Fungi's 101"}, {...}]`.  This also posts a message to slack.|
 |`DELETE` `/cards/<card_id>` | None | Returns: `Card successfully deleted`|
-|`PATCH` `/cards/<card_id>` | None | Returns: dictionary of the card that was changed with updated like count by +1|
+|`PATCH` `/cards/<card_id>` | None | Returns: dictionary of the card that was changed with updated like count by +1: `{'id':  1,'message': "I like fungi" 'likes': 2, 'board': "Fungi's 101"}`|
 

@@ -118,13 +118,3 @@ def increment_like_on_card(card_id):
     db.session.commit()
 
     return card.to_dict(), 200
-
-# 
-
-# Possible other routes:
-# get board by id
-# delete board and associated cards --- use cascading
-# update board
-# get all cards
-# update card
-# get card by id for board by id?
