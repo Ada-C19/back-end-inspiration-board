@@ -28,7 +28,7 @@ def post_card_to_board(board_id):
     )
     db.session.add(new_card)
     db.session.commit()
-    return make_response(jsonify(f"{new_card.message} successfully posted on {board.title}", 201))
+    return make_response(jsonify(f"{new_card.message} successfully posted on {board.title}"), 201)
 
 
 # READ
