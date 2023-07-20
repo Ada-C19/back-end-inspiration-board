@@ -39,6 +39,15 @@ def delete_one_board(card_id):
 
     return jsonify(response_body)
 
+@cards_bp.route("", methods=["DELETE"])
+def delete_all_cards():
+    cards = Card.query.all()
+    for card in cards:
+        db.session.delete(card)
+    db.session.commit()
+
+    return make_response(jsonify("All cards successfully deleted!"), 200)
+
 @cards_bp.route("/<card_id>", methods=["PATCH"])
 def increase_like_count(card_id):
     card = validate_model(Card, card_id)
