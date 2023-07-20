@@ -35,7 +35,7 @@ def like_card(card_id):
     card = validate_model(Card, card_id)
     card.likes_count += 1
     db.session.commit() 
-    # return make_response(f"card {card.id} liked")
+    
     return jsonify(card.make_card_dict())
 
 # DELETE
@@ -46,7 +46,9 @@ def delete_card(card_id):
     db.session.delete(card)
     db.session.commit()
 
-    return make_response(f"Card successfully deleted")
+    response = "Card successfully deleted"
+    return make_response(jsonify(response), 200)
+
 
 
 

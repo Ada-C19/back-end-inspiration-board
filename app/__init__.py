@@ -26,15 +26,13 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # Import models here for Alembic setup
-    # from app.models.ExampleModel import ExampleModel
     from app.models.board import Board
     from app.models.card import Card
 
 
-    # Register Blueprints here
-    # from .routes import example_bp
-    # app.register_blueprint(example_bp)
+    db.init_app(app)
+    migrate.init_app(app, db)
+
     from .board_routes import board_bp
     app.register_blueprint(board_bp)
 

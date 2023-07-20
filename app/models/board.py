@@ -20,7 +20,4 @@ class Board(db.Model):
         return Board(
             title=board_data["title"],
             owner=board_data["owner"],
-            # does this cards section need to be conditional for if there are no cards? 
-            # does cards start at 0 or will this result in a KeyError? 
-            # cards=board_data["cards"],
         )
