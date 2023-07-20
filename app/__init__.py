@@ -16,6 +16,8 @@ def create_app():
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
         "SQLALCHEMY_DATABASE_URI")
+    
+    app.config["SLACK_API_TOKEN_URI"] = os.environ.get("SLACK_API_TOKEN_URI")
 
     from app.models.board import Board
     from app.models.card import Card

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
 from app.models.card import Card
-from ..routes.helper import validate_model, validate_ids
+from ..routes.helper import validate_model, validate_ids, post_slack, requests, request
 
 # example_bp = Blueprint('example_bp', __name__)
 board_bp = Blueprint("board", __name__, url_prefix="/boards")
@@ -16,6 +16,7 @@ def create_board():
         new_board = Board.from_board_dict(request_body)
         db.session.add(new_board)
         db.session.commit()
+        post_slack(new_board.owner, new_board.title)
         return make_response(jsonify({"board": new_board.to_dict()}), 201)
     except KeyError as error:
         abort(make_response(
