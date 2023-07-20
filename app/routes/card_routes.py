@@ -21,10 +21,17 @@ def create_card_for_board():
     except KeyError:
         abort(make_response({"details":"Invalid data"}, 400))
 
-@card_bp.route("<card_id>", methods=["PATCH"])
+@card_bp.route("<card_id>/add", methods=["PATCH"])
 def add_like_to_one_card(card_id):
     card = validate_model(Card, card_id)
     card.likes_count += 1
+    db.session.commit()
+    return make_response({"card": card.to_dict()}, 200)
+
+@card_bp.route("<card_id>/remove", methods=["PATCH"])
+def remove_like_to_one_card(card_id):
+    card = validate_model(Card, card_id)
+    card.likes_count -= 1
     db.session.commit()
     return make_response({"card": card.to_dict()}, 200)
 
