@@ -41,7 +41,7 @@ def get_one_board(model_id):
 
 
 @boards_bp.route("/<model_id>/card", methods=["POST"])
-def add_card_by_goal_id(model_id):
+def add_card_by_board_id(model_id):
     board = validate(Board, model_id)
     card = Card.from_dict(request.get_json())
     validate_card(card)

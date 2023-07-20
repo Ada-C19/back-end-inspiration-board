@@ -6,21 +6,21 @@ from .routes_helper import validate, validate_card
 
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
+#  unused route
+# @cards_bp.route("", methods=["POST"])
+# def create_card():
+#     request_body = request.get_json()
+#     if "message" not in request_body:
+#         return make_response({"details": "data not in request body"}, 400)
 
-@cards_bp.route("", methods=["POST"])
-def create_card():
-    request_body = request.get_json()
-    if "message" not in request_body:
-        return make_response({"details": "data not in request body"}, 400)
+#     new_card = Card.from_dict(request_body)
 
-    new_card = Card.from_dict(request_body)
+#     db.session.add(new_card)
+#     db.session.commit()
 
-    db.session.add(new_card)
-    db.session.commit()
+#     response_body = {"cards": new_card.to_dict()}
 
-    response_body = {"cards": new_card.to_dict()}
-
-    return jsonify(response_body), 201
+#     return jsonify(response_body), 201
 
 
 @cards_bp.route("", methods=["GET"])
