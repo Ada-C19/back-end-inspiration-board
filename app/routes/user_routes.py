@@ -9,7 +9,7 @@ def login_user():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
-
+    
     if not username or not password:
         return make_response(jsonify({"message": "Username and password are required."}), 400)
 
@@ -20,13 +20,14 @@ def login_user():
 
     return jsonify({"message": "Login successful.", "user": user.to_dict()}), 200
 
+
 @user_bp.route("/register", methods=["POST"])
 def register_user():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
-    first_name = data.get("first_name")
-    last_name = data.get("last_name")
+    first_name = data.get("firstName")
+    last_name = data.get("lastName")
 
     if not username or not password or not first_name or not last_name:
         return make_response(jsonify({"message": "Username, password, first name, and last name are required."}), 400)
@@ -39,6 +40,6 @@ def register_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({"message": "User registered successfully.", "user": new_user.to_dict()}), 201
+    return new_user.to_dict(), 201
 
 

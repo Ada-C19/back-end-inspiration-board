@@ -11,7 +11,7 @@ def validate_model(cls, model_id):
     try:
         model_id = int(model_id)
     except:
-        abort(make_response({"message": f"{model_id} is not a vlid type ({type(model_id)})"}))
+        abort(make_response({"message": f"{model_id} is not a valid type ({type(model_id)})"}))
 
     model = cls.query.get(model_id)
 
