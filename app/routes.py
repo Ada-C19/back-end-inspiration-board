@@ -188,6 +188,18 @@ def update_card_message(card_id):
     return {
         card.card_id: card.to_dict()
     }, 200
+#handle likes
+@card_bp.route("/<card_id>", methods=["PATCH"])
+def update_card_likes(card_id):
+    card = validate_model(Card, card_id)
+    request_body = request.get_json()
+
+    card.likes_count = request_body["likes_count"]
+
+    db.session.commit()
+    return {
+        card.card_id: card.to_dict()
+    }, 200
 
 # DELETE - Delete ONE card
 
