@@ -192,9 +192,8 @@ def update_card_message(card_id):
 @card_bp.route("/<card_id>", methods=["PATCH"])
 def update_card_likes(card_id):
     card = validate_model(Card, card_id)
-    request_body = request.get_json()
 
-    card.likes_count = request_body["likes_count"]
+    card.likes_count += 1
 
     db.session.commit()
     return {
