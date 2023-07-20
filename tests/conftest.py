@@ -48,13 +48,7 @@ def one_card(app, one_board):
 
 
 
-# @pytest.fixture
-# def one_card_belongs_to_one_board(app, one_board, one_card):
-#     card = Card.query.first()
-#     board = Board.query.first()
-#     board.tasks.append(card)
-#     db.session.commit()
-#     return card, board 
+
 
 
 
