@@ -5,7 +5,6 @@ from app import db
 from app.models.board import Board
 from app.models.card import Card
 
-
 @pytest.fixture
 def app():
     # create the app with a test config dictionary
@@ -23,11 +22,9 @@ def app():
     with app.app_context():
         db.drop_all()
 
-
 @pytest.fixture
 def client(app):
     return app.test_client()
-
 
 @pytest.fixture
 def two_saved_boards(app):
@@ -41,7 +38,6 @@ def two_saved_boards(app):
     db.session.commit()
 
     return shakespeare_board, movie_board
-
 
 @pytest.fixture
 def three_saved_cards(app):
@@ -57,7 +53,6 @@ def three_saved_cards(app):
 
     return card_1, card_2, card_3
 
-
 @pytest.fixture
 def three_saved_cards_and_two_boards(three_saved_cards, two_saved_boards):
     card_1, card_2, card_3 = three_saved_cards
@@ -67,6 +62,13 @@ def three_saved_cards_and_two_boards(three_saved_cards, two_saved_boards):
 
     db.session.commit()
 
+@pytest.fixture
+def one_saved_card(app):
+    card_1 = Card(message="To be, or not to be, that is the question",
+                  likes_count=1)
 
 
+    db.session.add_all([card_1])
+    db.session.commit()
 
+    return card_1

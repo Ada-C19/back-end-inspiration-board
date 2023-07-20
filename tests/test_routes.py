@@ -1,5 +1,3 @@
-#  Routes for Board
-
 from app.models.board import Board
 import pytest
 
@@ -35,7 +33,6 @@ def test_delete_board(client):
 def test_delete_board_not_found(client):
     pass
 
-
 # @pytest.mark.skip(reason="Feature not yet built")
 def test_create_card(client, three_saved_cards):
     test_data = {"message": "May the Force be with you.", "likes_count": 0}
@@ -47,7 +44,6 @@ def test_create_card(client, three_saved_cards):
     assert response.status_code == 201
     assert response_body == "Card successfully created"
 
-
 # @pytest.mark.skip(reason="Feature not yet built")
 def test_create_card_for_one_board(client, three_saved_cards_and_two_boards):
     test_data = {"id": 3}
@@ -58,7 +54,6 @@ def test_create_card_for_one_board(client, three_saved_cards_and_two_boards):
 
     assert response.status_code == 201
     assert response_body == {"id": 2, "card_id": 3}
-
 
 # @pytest.mark.skip(reason="Feature not yet built")
 def test_get_all_cards_for_one_board(client, three_saved_cards_and_two_boards):
@@ -75,7 +70,6 @@ def test_get_all_cards_for_one_board(client, three_saved_cards_and_two_boards):
                   "likes_count": 3}]
     }
 
-
 # @pytest.mark.skip(reason="Feature not yet built")
 def test_get_cards_for_all_boards(client, three_saved_cards_and_two_boards):
     response = client.get("/cards")
@@ -85,3 +79,11 @@ def test_get_cards_for_all_boards(client, three_saved_cards_and_two_boards):
     assert response.status_code == 200
     assert len(response_body) == 3
 
+# @pytest.mark.skip(reason="Feature not yet built")
+def test_likes_increments_by_one(client, one_saved_card):
+    response = client.patch("/cards/1")
+    response_body = response.get_json()
+    updated_likes = response_body["likes_count"]
+
+    assert response.status_code == 200
+    assert updated_likes == 2

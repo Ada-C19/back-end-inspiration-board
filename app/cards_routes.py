@@ -3,9 +3,7 @@ from app import db
 from app.models.card import Card
 from app.routes_helpers import validate_model
 
-
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
-
 
 @cards_bp.route("", methods=["POST"])
 def create_card():
@@ -20,7 +18,6 @@ def create_card():
 
     return make_response(jsonify({"id": new_card_id, "message": "Card successfully created"}), 201)
 
-
 @cards_bp.route("", methods=["GET"])
 def read_all_cards():
     cards = Card.query.all()
@@ -28,7 +25,6 @@ def read_all_cards():
     cards_response = [card.card_to_dict() for card in cards]
 
     return make_response(jsonify(cards_response), 200)
-
 
 @cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_one_board(card_id):
@@ -42,7 +38,6 @@ def delete_one_board(card_id):
     db.session.commit()
 
     return jsonify(response_body)
-
 
 @cards_bp.route("/<card_id>", methods=["PATCH"])
 def increase_like_count(card_id):
