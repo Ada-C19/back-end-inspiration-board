@@ -189,7 +189,7 @@ def update_card_message(card_id):
         card.card_id: card.to_dict()
     }, 200
 #handle likes
-@card_bp.route("/<card_id>", methods=["PATCH"])
+@card_bp.route("/<card_id>/likes", methods=["PATCH"])
 def update_card_likes(card_id):
     card = validate_model(Card, card_id)
 
