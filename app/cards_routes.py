@@ -27,7 +27,7 @@ def read_all_cards():
     return make_response(jsonify(cards_response), 200)
 
 @cards_bp.route("/<card_id>", methods=["DELETE"])
-def delete_one_board(card_id):
+def delete_one_card(card_id):
     card = validate_model(Card, card_id)
 
     response_body = {
