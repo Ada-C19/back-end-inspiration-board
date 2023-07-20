@@ -16,7 +16,9 @@ def create_card():
     db.session.add(new_card)
     db.session.commit()
 
-    return make_response(jsonify("Card successfully created"), 201)
+    new_card_id = new_card.id
+
+    return make_response(jsonify({"id": new_card_id, "message": "Card successfully created"}), 201)
 
 
 @cards_bp.route("", methods=["GET"])
