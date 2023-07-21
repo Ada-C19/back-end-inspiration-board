@@ -27,8 +27,18 @@ def validate_message_length(request_body):
     if len(request_body["message"]) <= 40 and not len(request_body) == 0:
         return
     else:
-        abort(make_response({"details": "Message cannot exceed 40 characters"}, 400))
+        abort(make_response({"details": "Message must be 1 to 40 characters"}, 400))
+
+def validate_board_data(request_body):
+    if len(request_body["title"]) == 0:
+        abort(make_response({"details": "Title cannot be empty"}, 400))
+
+    if len(request_body["owner"]) == 0:
+        abort(make_response({"details": "Owner cannot be empty"}, 400))
     
+    return 
+
+        
 def query_sort(board_id):
     sort_param = request.args.get("sort")
     card_query = Card.query.filter(Card.board_id == board_id)

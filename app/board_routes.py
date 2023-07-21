@@ -2,7 +2,7 @@ from app import db
 from flask import Blueprint, request, jsonify, make_response, abort
 from app.models.board import Board
 from app.models.card import Card
-from .route_helper import validate_model, create_card, validate_message_length, query_sort
+from .route_helper import validate_model, create_card, validate_message_length, query_sort, validate_board_data
 
 bp = Blueprint('boards', __name__, url_prefix="/boards")
 
@@ -11,6 +11,8 @@ bp = Blueprint('boards', __name__, url_prefix="/boards")
 @bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
+
+    validate_board_data(request_body)
 
     new_board = Board.from_dict(request_body)
 
