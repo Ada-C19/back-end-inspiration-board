@@ -1,6 +1,5 @@
 from app import db
 from flask import Blueprint, request, jsonify, make_response, abort
-from sqlalchemy import asc, desc
 from app.models.board import Board
 from app.models.card import Card
 from .route_helper import validate_model, create_card, validate_message_length, query_sort
