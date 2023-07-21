@@ -9,9 +9,19 @@ def test_get_board_no_board_saved(client):
     assert response.status.code == 200
     assert response_body ==[]
 
-@pytest.mark.skip(reason="Feature not yet built")
+#@pytest.mark.skip(reason="Feature not yet built")
 def test_create_board(client):
-    pass
+    test_data = {
+        "id": 1,
+        "owner": "Angelica",
+        "title": "boardie"  
+    }
+    response = client.post("/boards", json=test_data)
+
+    response_body = response.get_json()
+
+    assert response.status_code == 201
+    assert response_body == "<Board 1> successfully created!"
 
 # @pytest.mark.skip(reason="Feature not yet built")
 def test_get_one_saved_board(client):
@@ -25,13 +35,27 @@ def test_get_one_saved_board(client):
         "title": "The Keep on Keepin On Board"  
     }
 
-@pytest.mark.skip(reason="Feature not yet built")
+#@pytest.mark.skip(reason="Feature not yet built")
 def test_delete_board(client):
-    pass
+    response = client.delete("/boards/1")
 
-@pytest.mark.skip(reason="Feature not yet built")
+    response_body = response.get_json()
+
+    assert response.status_code == 200
+    assert response_body == {
+        "details": "Board 1 \"boardie\" successfully deleted"
+        }
+
+#@pytest.mark.skip(reason="Feature not yet built")
 def test_delete_board_not_found(client):
-    pass
+    response = client.delete("/boards/333")
+
+    response_body = response.get_json()
+
+    assert response.status_code == 404
+    assert response_body == {
+        "message": "Board 333 not found"
+        }
 
 # @pytest.mark.skip(reason="Feature not yet built")
 def test_create_card(client, three_saved_cards):
