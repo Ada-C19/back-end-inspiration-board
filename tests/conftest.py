@@ -33,7 +33,7 @@ def one_board(app):
 @pytest.fixture
 def one_card(app):
     new_card = Card(
-        message="You're awesome!", completed_at=None)
+        message="You're awesome!", board_id=1)
     db.session.add(new_card)
     db.session.commit()
 
