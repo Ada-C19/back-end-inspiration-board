@@ -16,7 +16,7 @@ def create_app():
     CORS(app)
     app.config["CORS_HEADERS"] = "Content-Type"
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "SQLALCHEMY_DATABASE_URI")
+        "RENDER_DATABASE_URI")
 
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
