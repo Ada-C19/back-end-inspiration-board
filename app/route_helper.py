@@ -29,4 +29,13 @@ def validate_message_length(request_body):
     else:
         abort(make_response({"details": "Message cannot exceed 40 characters"}, 400))
     
-        
+def query_sort(board_id):
+    sort_param = request.args.get("sort")
+    card_query = Card.query.filter(Card.board_id == board_id)
+
+    if sort_param == "asc":
+        card_query = card_query.order_by(Card.likes_count)
+    if sort_param == "desc":
+        card_query = card_query.order_by(Card.likes_count.desc())
+
+    return card_query

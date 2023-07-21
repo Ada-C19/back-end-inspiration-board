@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, make_response, abort
 from sqlalchemy import asc, desc
 from app.models.board import Board
 from app.models.card import Card
-from .route_helper import validate_model, create_card, validate_message_length
+from .route_helper import validate_model, create_card, validate_message_length, query_sort
 
 bp = Blueprint('boards', __name__, url_prefix="/boards")
 
@@ -43,17 +43,9 @@ def read_one_board(board_id):
 def retrieve_cards(board_id): 
     board = validate_model(Board, board_id)
 
-    sort_param = request.args.get("sort")
-    card_query = Card.query.filter(Card.board_id==board.id)
+    card_query = query_sort(board.id)
 
-    if sort_param == "asc":
-        card_query = card_query.order_by(Card.likes_count).all()
-    if sort_param == "desc":
-        card_query = card_query.order_by(desc(Card.likes_count)).all()
-
-    cards_response = []
-    for card in card_query:
-        cards_response.append(card.to_dict())
+    cards_response = [card.to_dict() for card in card_query]
 
     return jsonify(cards_response), 200
 
