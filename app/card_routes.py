@@ -13,14 +13,41 @@ def delete_card(card_id):
     db.session.commit()
 
     message = f'Card {card_id} successfully deleted'
-    return make_response({"details":message}, 200)
+    return make_response({"details": message}, 200)
 
-@cards_bp.route("/<card_id>/like", methods=["PATCH"])
-def update_likes(card_id):
+@cards_bp.route("/<card_id>/increase", methods=["PATCH"])
+def increase_likes(card_id):
     card = validate_model(Card, card_id)
 
     card.likes_count += 1
 
     db.session.commit()
+    return jsonify(card.to_dict()), 200
+
+@cards_bp.route("/<card_id>/decrease", methods=["PATCH"])
+def decrease_likes(card_id):
+    card = validate_model(Card, card_id)
+
+    if card.likes_count > 0:
+        card.likes_count -= 1
+
+    db.session.commit()
     return jsonify(card.to_dict())
 
+@cards_bp.route("/<card_id>", methods=["PATCH"])
+def update_card_message(card_id):
+    card = validate_model(Card, card_id)
+
+    new_message = request.json.get("message")
+
+    validated_new_message = validate_message(new_message)
+    if validated_new_message is not None:
+        return validated_new_message
+    
+    card.message = new_message
+
+    db.session.commit()
+    return jsonify(card.to_dict()), 200
+
+
+    

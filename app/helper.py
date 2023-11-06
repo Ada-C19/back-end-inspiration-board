@@ -15,6 +15,7 @@ def validate_model(cls, model_id):
 
 def validate_message(message):
     if not message:
-        return make_response(jsonify(error="Message is required"), 400)
-    elif len(message) > 40:
-        return make_response(jsonify(error="Message should not exceed 40 characters"), 400)
+        return make_response(jsonify(errors=[{"field": "cardMessage", "message": "Message is required"}]), 400)
+    
+    if len(message) > 40:
+        return make_response(jsonify(errors=[{"field": "cardMessage", "message": "Message should not exceed 40 characters"}]), 400)
