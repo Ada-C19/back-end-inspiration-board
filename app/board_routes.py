@@ -65,7 +65,7 @@ def create_card(board_id):
     if validated_message is not None:
         return validated_message
     
-    card = Card(message=message, likes_count=0)
+    card = Card(message=message, likes_count=0, board=board)
 
     db.session.add(card)
     db.session.commit()

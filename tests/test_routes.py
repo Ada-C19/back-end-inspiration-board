@@ -49,7 +49,7 @@ def test_get_card_not_found(client):
 
 def test_update_like_on_card(client, one_card):
     # Act
-    response = client.patch("cards/1/like")
+    response = client.patch("cards/1/increase")
     response_body = response.get_json()
 
     # Assert
